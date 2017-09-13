@@ -16,11 +16,11 @@ import a13solutions.myeco.R;
 public class FragmentHome extends Fragment implements CustomFragment {
 
     private Controller controller;
+    private int fragmentId;
 
     public FragmentHome() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,5 +33,15 @@ public class FragmentHome extends Fragment implements CustomFragment {
     @Override
     public void setController(Controller controller) {
         this.controller=controller;
+    }
+
+    @Override
+    public void setFragmentId(int id) {
+        this.fragmentId=id;
+    }
+
+    @Override
+    public int getFragmentId() {
+        return fragmentId;
     }
 }

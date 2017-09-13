@@ -46,18 +46,23 @@ public class Controller {
         switch (position) {
             case 0:
                 fragment = new FragmentHome();
+                ((CustomFragment)fragment).setFragmentId(0);
                 break;
             case 1:
                 fragment = new FragmentRegister();
+                ((CustomFragment)fragment).setFragmentId(1);
                 break;
             case 2:
                 fragment = new FragmentLogin();
+                ((CustomFragment)fragment).setFragmentId(2);
                 break;
             case 3:
                 fragment = new FragmentTest();
+                ((CustomFragment)fragment).setFragmentId(3);
                 break;
             default:
                 fragment = new FragmentHome();
+                ((CustomFragment)fragment).setFragmentId(0);
                 break;
         }
 

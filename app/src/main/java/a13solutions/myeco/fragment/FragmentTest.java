@@ -17,9 +17,20 @@ public class FragmentTest extends Fragment implements CustomFragment {
 
 
     private Controller controller;
+    private int fragmentId;
 
     public FragmentTest() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void setFragmentId(int id) {
+        this.fragmentId=id;
+    }
+
+    @Override
+    public int getFragmentId() {
+        return fragmentId;
     }
 
 

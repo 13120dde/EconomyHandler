@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a13solutions.myeco.adapter.SlidingMenuAdapter;
+import a13solutions.myeco.fragment.CustomFragment;
 import a13solutions.myeco.model.ItemSlideMenu;
 
 /**The skeleton code for an app that shows all it's UI components in MainActivity's frame by
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Declaration of other variables
     private Controller controller;
+    private int currentFragmentId;
 
 
     @Override
@@ -147,6 +149,17 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("fragmentId", currentFragmentId);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        controller.replaceFragment( savedInstanceState.getInt("fragmentId"),false);
+    }
 
     /**Add new items to the list by instantiating a new ItemSlideMenu object, also dont forget to
      * add a new case in replaceFragment() method.
@@ -167,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void replaceFragment(Fragment fragment, boolean backstack){
         if(fragment!=null){
+            currentFragmentId = ((CustomFragment)fragment).getFragmentId();
             FragmentManager fm = getFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.main_content, fragment);

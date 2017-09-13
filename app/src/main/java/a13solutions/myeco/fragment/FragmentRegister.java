@@ -19,6 +19,9 @@ public class FragmentRegister extends Fragment implements CustomFragment {
 
 
     private Controller controller;
+    private int fragmentId;
+    private String email, password, passwordRepeat, firstName, surname;
+
     private EditText etEmail, etPassword, etPasswordRepeat, etFirstName, etSurname;
     private Button btnRegister;
 
@@ -26,6 +29,15 @@ public class FragmentRegister extends Fragment implements CustomFragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void setFragmentId(int id) {
+        this.fragmentId=id;
+    }
+
+    @Override
+    public int getFragmentId() {
+        return fragmentId;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,5 +75,18 @@ public class FragmentRegister extends Fragment implements CustomFragment {
     @Override
     public void setController(Controller controller) {
         this.controller=controller;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        etEmail.onSaveInstanceState(new Bundle(){
+
+        });
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 }
