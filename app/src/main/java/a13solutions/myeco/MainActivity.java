@@ -1,11 +1,13 @@
 package a13solutions.myeco;
 
+import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -173,6 +175,19 @@ public class MainActivity extends AppCompatActivity {
             }
             ft.commit();
         }
+    }
+
+    public void showNeutralDialog(String title, String message){
+        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
 

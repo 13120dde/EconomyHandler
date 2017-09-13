@@ -7,13 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import a13solutions.myeco.Controller;
 import a13solutions.myeco.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentTest extends Fragment {
+public class FragmentTest extends Fragment implements CustomFragment {
 
+
+    private Controller controller;
 
     public FragmentTest() {
         // Required empty public constructor
@@ -27,4 +30,8 @@ public class FragmentTest extends Fragment {
         return inflater.inflate(R.layout.fragment_fragment_test, container, false);
     }
 
+    @Override
+    public void setController(Controller controller) {
+        this.controller=controller;
+    }
 }

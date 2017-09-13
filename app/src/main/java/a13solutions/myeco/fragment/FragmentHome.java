@@ -6,15 +6,16 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import a13solutions.myeco.Controller;
 import a13solutions.myeco.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentHome extends Fragment {
+public class FragmentHome extends Fragment implements CustomFragment {
 
+    private Controller controller;
 
     public FragmentHome() {
         // Required empty public constructor
@@ -29,4 +30,8 @@ public class FragmentHome extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void setController(Controller controller) {
+        this.controller=controller;
+    }
 }
