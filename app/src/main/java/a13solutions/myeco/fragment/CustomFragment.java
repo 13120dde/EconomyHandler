@@ -21,7 +21,7 @@ public interface CustomFragment {
     public void setFragmentId(int id);
 
     /**Returns the id of this Fragment-object. The id is set when Controller creates a new Fragment
-     * in replaceFragment(int i, boolean backstack) method.
+     * in placeFragmentInActivity(int i, boolean backstack) method.
      *
      * @return id : int
      */

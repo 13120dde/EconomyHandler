@@ -30,6 +30,11 @@ public class FragmentRegister extends Fragment implements CustomFragment {
     }
 
     @Override
+    public void setController(Controller controller) {
+        this.controller=controller;
+    }
+
+    @Override
     public void setFragmentId(int id) {
         this.fragmentId=id;
     }
@@ -38,6 +43,7 @@ public class FragmentRegister extends Fragment implements CustomFragment {
     public int getFragmentId() {
         return fragmentId;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,21 +78,4 @@ public class FragmentRegister extends Fragment implements CustomFragment {
 
     }
 
-    @Override
-    public void setController(Controller controller) {
-        this.controller=controller;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        etEmail.onSaveInstanceState(new Bundle(){
-
-        });
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
 }

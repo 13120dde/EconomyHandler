@@ -21,6 +21,10 @@ import java.util.List;
 
 import a13solutions.myeco.adapter.SlidingMenuAdapter;
 import a13solutions.myeco.fragment.CustomFragment;
+import a13solutions.myeco.fragment.FragmentHome;
+import a13solutions.myeco.fragment.FragmentLogin;
+import a13solutions.myeco.fragment.FragmentRegister;
+import a13solutions.myeco.fragment.FragmentTest;
 import a13solutions.myeco.model.ItemSlideMenu;
 
 /**The skeleton code for an app that shows all it's UI components in MainActivity's frame by
@@ -59,9 +63,11 @@ public class MainActivity extends AppCompatActivity {
         instantiateComponents();
 
         //populate the menu with a list containing ItemSlideMenu-objects.
-        listSliding = controller.addItemsToSlidingList(listSliding);
+        addItemsToSlidingList();
         setupListView();
         instantiateActionBar();
+        //Display fragment 1 when start
+        replaceFragment(0,true);
 
     }
 
@@ -100,8 +106,7 @@ public class MainActivity extends AppCompatActivity {
         //Close menu
         drawerLayout.closeDrawer(listViewSliding);
 
-        //Display fragment 1 when start
-        controller.replaceFragment(0,true);
+
 
         //Handle on item click
         listViewSliding.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -113,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 listViewSliding.setItemChecked(i,true);
 
                 //Replace fragment
-                controller.replaceFragment(i, true);
+                replaceFragment(i, true);
                 //Close menu
                 drawerLayout.closeDrawer(listViewSliding);
 
@@ -125,6 +130,19 @@ public class MainActivity extends AppCompatActivity {
         listViewSliding =(ListView) findViewById(R.id.lv_sliding_menu);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         listSliding = new ArrayList<>();
+    }
+
+    public void showNeutralDialog(String title, String message){
+        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     @Override
@@ -158,19 +176,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        controller.replaceFragment( savedInstanceState.getInt("fragmentId"),false);
+        replaceFragment( savedInstanceState.getInt("fragmentId"),false);
     }
 
-    /**Add new items to the list by instantiating a new ItemSlideMenu object, also dont forget to
-     * add a new case in replaceFragment() method.
-     *
-     */
-    /*private void addItemsToSlidingList() {
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_account_balance_black_48dp, "Home"));
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_assessment_black_48dp, "Register"));
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_settings_black_48dp, "Login"));
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_settings_black_48dp, "Test"));
-    }*/
 
     /**The fragment passed in as argument in placed in the MainActivity's content_main frame.
      * The boolean value indicates if the previous Fragment should be in backstack.
@@ -178,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
      * @param fragment : Fragment
      * @param backstack : boolean
      */
-    public void replaceFragment(Fragment fragment, boolean backstack){
+    public void placeFragmentInActivity(Fragment fragment, boolean backstack){
         if(fragment!=null){
             currentFragmentId = ((CustomFragment)fragment).getFragmentId();
             FragmentManager fm = getFragmentManager();
@@ -191,17 +199,54 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showNeutralDialog(String title, String message){
-        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
-        dialog.setTitle(title);
-        dialog.setMessage(message);
-        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok", new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int which){
-                dialog.dismiss();
-            }
-        });
+    /**
+     *
+     * @param position : int
+     * @param backstack : boolean
+     */
+    public void replaceFragment(int position, boolean backstack) {
 
-        dialog.show();
+        Fragment fragment = null;
+
+        //Add new Fragments to show here.
+        switch (position) {
+            case 0:
+                fragment = new FragmentHome();
+                ((CustomFragment)fragment).setFragmentId(0);
+                break;
+            case 1:
+                fragment = new FragmentRegister();
+                ((CustomFragment)fragment).setFragmentId(1);
+                break;
+            case 2:
+                fragment = new FragmentLogin();
+                ((CustomFragment)fragment).setFragmentId(2);
+                break;
+            case 3:
+                fragment = new FragmentTest();
+                ((CustomFragment)fragment).setFragmentId(3);
+                break;
+            default:
+                fragment = new FragmentHome();
+                ((CustomFragment)fragment).setFragmentId(0);
+                break;
+        }
+
+        ((CustomFragment) fragment).setController(controller);
+        placeFragmentInActivity(fragment, true);
+
+    }
+
+    /**Populates the List-object passed in as arguments with new menu-items. Returns the populated
+     * list.
+     */
+    public void addItemsToSlidingList() {
+
+        listSliding.add(new ItemSlideMenu(R.drawable.ic_home, "Home"));
+        listSliding.add(new ItemSlideMenu(R.drawable.ic_user_register, "Register"));
+        listSliding.add(new ItemSlideMenu(R.drawable.ic_login, "Login"));
+        listSliding.add(new ItemSlideMenu(R.drawable.ic_settings, "Settings"));
+
     }
 
 
