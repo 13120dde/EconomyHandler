@@ -1,6 +1,4 @@
-package a13solutions.myeco.fragment;
-
-import a13solutions.myeco.MainActivity;
+package a13solutions.myeco.view;
 
 /**
  * Created by 13120dde on 2017-09-14.

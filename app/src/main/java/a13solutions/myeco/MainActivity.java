@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a13solutions.myeco.adapter.SlidingMenuAdapter;
-import a13solutions.myeco.fragment.FragmentHome;
-import a13solutions.myeco.fragment.FragmentLogin;
-import a13solutions.myeco.fragment.FragmentMethods;
-import a13solutions.myeco.fragment.FragmentRegister;
-import a13solutions.myeco.fragment.FragmentTest;
+import a13solutions.myeco.view.FragmentHome;
+import a13solutions.myeco.view.FragmentLogin;
+import a13solutions.myeco.view.FragmentMethods;
+import a13solutions.myeco.view.FragmentRegister;
+import a13solutions.myeco.view.FragmentTest;
 import a13solutions.myeco.model.ItemSlideMenu;
 
 /**The skeleton code for an app that shows all it's UI components in MainActivity's frame by
@@ -35,7 +35,6 @@ import a13solutions.myeco.model.ItemSlideMenu;
  */
 public class MainActivity extends AppCompatActivity {
 
-    //Purple #8e44ad
 
     //Objects needed for the sliding-menu
     private List<ItemSlideMenu> listSliding;
@@ -99,9 +98,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                 selectFragment(position);
-                setTitle(listSliding.get(position).getTitle());
-                listViewSliding.setItemChecked(position,true);
-                drawerLayout.closeDrawer(listViewSliding);
+
 
             }
         });
@@ -115,6 +112,10 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.main_content,fragment).commit();
+
+        setTitle(listSliding.get(position).getTitle());
+        listViewSliding.setItemChecked(position,true);
+        drawerLayout.closeDrawer(listViewSliding);
     }
 
     private void instantiateComponents() {

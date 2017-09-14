@@ -1,4 +1,4 @@
-package a13solutions.myeco.fragment;
+package a13solutions.myeco.view;
 
 
 import android.app.Fragment;

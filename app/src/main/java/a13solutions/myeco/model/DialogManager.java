@@ -11,6 +11,13 @@ import a13solutions.myeco.MainActivity;
 
 public class DialogManager {
 
+    /**Shows a neutral Alert dialog with title  and message passed in as argument. Need to pass in
+     * the Activity on which the Dialog will be shown.
+     *
+     * @param title : String
+     * @param message : String
+     * @param activity : MainActivity
+     */
     public static void showNeutralDialog(String title, String message, MainActivity activity){
         AlertDialog dialog = new AlertDialog.Builder(activity).create();
         dialog.setTitle(title);
