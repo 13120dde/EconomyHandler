@@ -1,12 +1,18 @@
 package a13solutions.myeco.model;
 
+import a13solutions.myeco.MainActivity;
+
 /**
  * Created by 13120dde on 2017-09-13.
  */
 
 public class LogicRegister {
 
+    private MainActivity activity;
 
+    public LogicRegister(MainActivity activity) {
+        this.activity=activity;
+    }
 
     /**Validates the password to match the password requirements. The requirements are: minlength=8,
      * at least one digit and uppercase letter.
@@ -67,5 +73,38 @@ public class LogicRegister {
             message+="Incorrect email format";
         }
         return new ReturnPacket(isSuccess,message);
+    }
+
+    public boolean registerAccount(String email , String password, String passwordRepeat, String firstName, String surname) {
+        String resultTitle="Success", resultInfo="";
+        boolean allSuccessfull=true;
+
+        ReturnPacket result;
+
+        result = checkEmail(email);
+        if(!result.isSuccess()){
+            resultTitle="Error";
+            resultInfo+=result.getMessage()+"\n";
+            allSuccessfull=result.isSuccess();
+        }
+        result = checkPassword(password,passwordRepeat);
+        if(!result.isSuccess()){
+            resultTitle="Error";
+            resultInfo+=result.getMessage()+"\n";
+            allSuccessfull=result.isSuccess();
+        }
+
+        if(firstName.isEmpty() || surname.isEmpty()){
+            resultTitle="Error";
+            resultInfo+="Enter your first and sur-name";
+            allSuccessfull=false;
+        }
+
+        if(allSuccessfull){
+            resultInfo="Registration complete.\nProcede to login.";
+        }
+
+        DialogManager.showNeutralDialog(resultTitle,resultInfo, activity);
+        return allSuccessfull;
     }
 }

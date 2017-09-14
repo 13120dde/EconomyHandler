@@ -9,18 +9,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import a13solutions.myeco.Controller;
+import a13solutions.myeco.MainActivity;
 import a13solutions.myeco.R;
+import a13solutions.myeco.model.LogicRegister;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentRegister extends Fragment implements CustomFragment {
+public class FragmentRegister extends Fragment implements FragmentMethods{
 
-
-    private Controller controller;
-    private int fragmentId;
-    private String email, password, passwordRepeat, firstName, surname;
+    private final String ARG_FRAME_NUMBER="frame_number";
 
     private EditText etEmail, etPassword, etPasswordRepeat, etFirstName, etSurname;
     private Button btnRegister;
@@ -30,20 +28,9 @@ public class FragmentRegister extends Fragment implements CustomFragment {
     }
 
     @Override
-    public void setController(Controller controller) {
-        this.controller=controller;
+    public String getFrameNumberTag() {
+        return ARG_FRAME_NUMBER;
     }
-
-    @Override
-    public void setFragmentId(int id) {
-        this.fragmentId=id;
-    }
-
-    @Override
-    public int getFragmentId() {
-        return fragmentId;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,8 +47,19 @@ public class FragmentRegister extends Fragment implements CustomFragment {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                controller.registerAccount(etEmail.getText().toString(),etPassword.getText().toString(),
-                        etPasswordRepeat.getText().toString(),etFirstName.getText().toString(), etSurname.getText().toString());
+              boolean registered = new LogicRegister((MainActivity) getActivity()).registerAccount(etEmail.getText().toString(),etPassword.getText().toString(),
+                        etPasswordRepeat.getText().toString(),etFirstName.getText().toString(), etSurname.getText().toString()) ;
+
+               if(!registered){
+                   etEmail.setText("");
+                   etPassword.setText("");
+                   etPasswordRepeat.setText("");
+                   etFirstName.setText("");
+                   etSurname.setText("");
+               }else{
+                   //proceed to loginwindow
+                   ((MainActivity)getActivity()).selectFragment(2);
+               }
             }
         });
     }
@@ -74,8 +72,6 @@ public class FragmentRegister extends Fragment implements CustomFragment {
         etFirstName = rootView.findViewById(R.id.et_first_name);
         etSurname= rootView.findViewById(R.id.et_surname);
         btnRegister= rootView.findViewById(R.id.btn_register);
-
-
     }
 
 }

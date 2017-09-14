@@ -7,16 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import a13solutions.myeco.Controller;
+import a13solutions.myeco.MainActivity;
 import a13solutions.myeco.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentHome extends Fragment implements CustomFragment {
+public class FragmentHome extends Fragment implements FragmentMethods {
 
-    private Controller controller;
-    private int fragmentId;
+    public final String ARG_FRAME_NUMBER="frame_number";
 
     public FragmentHome() {
         // Required empty public constructor
@@ -31,17 +30,7 @@ public class FragmentHome extends Fragment implements CustomFragment {
     }
 
     @Override
-    public void setController(Controller controller) {
-        this.controller=controller;
-    }
-
-    @Override
-    public void setFragmentId(int id) {
-        this.fragmentId=id;
-    }
-
-    @Override
-    public int getFragmentId() {
-        return fragmentId;
+    public String getFrameNumberTag() {
+        return ARG_FRAME_NUMBER;
     }
 }

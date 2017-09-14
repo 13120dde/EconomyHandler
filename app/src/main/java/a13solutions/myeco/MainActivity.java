@@ -1,13 +1,10 @@
 package a13solutions.myeco;
 
-import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a13solutions.myeco.adapter.SlidingMenuAdapter;
-import a13solutions.myeco.fragment.CustomFragment;
 import a13solutions.myeco.fragment.FragmentHome;
 import a13solutions.myeco.fragment.FragmentLogin;
+import a13solutions.myeco.fragment.FragmentMethods;
 import a13solutions.myeco.fragment.FragmentRegister;
 import a13solutions.myeco.fragment.FragmentTest;
 import a13solutions.myeco.model.ItemSlideMenu;
@@ -48,27 +45,23 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     //Declaration of other variables
-    private Controller controller;
-    private int currentFragmentId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-
         //Init components
-        controller = new Controller(this);
         instantiateComponents();
 
         //populate the menu with a list containing ItemSlideMenu-objects.
         addItemsToSlidingList();
         setupListView();
         instantiateActionBar();
-        //Display fragment 1 when start
-        replaceFragment(0,true);
 
+        if (savedInstanceState == null) {
+            selectFragment(0);
+        }
     }
 
     private void instantiateActionBar() {
@@ -91,58 +84,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupListView() {
+
         adapter = new SlidingMenuAdapter(this, listSliding);
         listViewSliding.setAdapter(adapter);
 
-        //Display icon to open / close sliding list
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //Set title
         setTitle(listSliding.get(0).getTitle());
-
-        //item-selected
         listViewSliding.setItemChecked(0, true);
-
-        //Close menu
         drawerLayout.closeDrawer(listViewSliding);
-
-
 
         //Handle on item click
         listViewSliding.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Set title
-                setTitle(listSliding.get(i).getTitle());
-                //item selected
-                listViewSliding.setItemChecked(i,true);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                //Replace fragment
-                replaceFragment(i, true);
-                //Close menu
+                selectFragment(position);
+                setTitle(listSliding.get(position).getTitle());
+                listViewSliding.setItemChecked(position,true);
                 drawerLayout.closeDrawer(listViewSliding);
 
             }
         });
     }
 
+    public void selectFragment(int position) {
+        Fragment fragment = getNewFragment(position);
+        Bundle args = new Bundle();
+        args.putInt(((FragmentMethods)fragment).getFrameNumberTag(), position);
+        fragment.setArguments(args);
+
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.main_content,fragment).commit();
+    }
+
     private void instantiateComponents() {
         listViewSliding =(ListView) findViewById(R.id.lv_sliding_menu);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         listSliding = new ArrayList<>();
-    }
-
-    public void showNeutralDialog(String title, String message){
-        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
-        dialog.setTitle(title);
-        dialog.setMessage(message);
-        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok", new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int which){
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
     }
 
     @Override
@@ -167,44 +145,13 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("fragmentId", currentFragmentId);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        replaceFragment( savedInstanceState.getInt("fragmentId"),false);
-    }
-
-
-    /**The fragment passed in as argument in placed in the MainActivity's content_main frame.
-     * The boolean value indicates if the previous Fragment should be in backstack.
-     *
-     * @param fragment : Fragment
-     * @param backstack : boolean
-     */
-    public void placeFragmentInActivity(Fragment fragment, boolean backstack){
-        if(fragment!=null){
-            currentFragmentId = ((CustomFragment)fragment).getFragmentId();
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.main_content, fragment);
-            if(backstack){
-                ft.addToBackStack(null);
-            }
-            ft.commit();
-        }
-    }
-
-    /**
+    /**Rnstantiate and return a new fragment. The type of fragment returned is based on the int
+     * passed in as argument.
      *
      * @param position : int
-     * @param backstack : boolean
+     *@return fragment : Fragment
      */
-    public void replaceFragment(int position, boolean backstack) {
+    public Fragment getNewFragment(int position) {
 
         Fragment fragment = null;
 
@@ -212,29 +159,21 @@ public class MainActivity extends AppCompatActivity {
         switch (position) {
             case 0:
                 fragment = new FragmentHome();
-                ((CustomFragment)fragment).setFragmentId(0);
                 break;
             case 1:
                 fragment = new FragmentRegister();
-                ((CustomFragment)fragment).setFragmentId(1);
                 break;
             case 2:
                 fragment = new FragmentLogin();
-                ((CustomFragment)fragment).setFragmentId(2);
                 break;
             case 3:
                 fragment = new FragmentTest();
-                ((CustomFragment)fragment).setFragmentId(3);
                 break;
             default:
                 fragment = new FragmentHome();
-                ((CustomFragment)fragment).setFragmentId(0);
                 break;
         }
-
-        ((CustomFragment) fragment).setController(controller);
-        placeFragmentInActivity(fragment, true);
-
+        return fragment;
     }
 
     /**Populates the List-object passed in as arguments with new menu-items. Returns the populated
@@ -248,6 +187,5 @@ public class MainActivity extends AppCompatActivity {
         listSliding.add(new ItemSlideMenu(R.drawable.ic_settings, "Settings"));
 
     }
-
 
 }
