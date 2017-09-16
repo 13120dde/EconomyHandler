@@ -7,4 +7,6 @@ package a13solutions.myeco.view;
 public interface FragmentMethods {
 
     public String getFrameNumberTag();
+
+    public void setDate();
 }

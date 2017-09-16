@@ -33,6 +33,11 @@ public class FragmentRegister extends Fragment implements FragmentMethods{
     }
 
     @Override
+    public void setDate() {
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 

@@ -13,16 +13,36 @@
     <string name="register_password_repeat">Repeat password</string>
     <string name="register_first_name">First name</string>
     <string name="register_surname">Surname</string>
-    <string name="register_account">REGISTER ACCOUNT</string>
+    <string name="item_amount">Amount</string>
+    <string name="item_title">Title</string>
+
 
     <!-- Button Strings -->
     <string name="btn_register">REGISTER</string>
     <string name="btn_login">LOGIN</string>
+    <string name="register_account">REGISTER ACCOUNT</string>
+    <string name="btn_add_exp_inc">ADD</string>
 
     <!-- TextView Strings -->
-    <string name="tv_forgot_password">forgot password?</string>
+    <string name="tv_forgot_password">Forgot password?</string>
+    <string name="tv_fragment_type_expenditure">Add expenditure</string>
+    <string name="tv_fragment_type_income">Add income</string>
+    <string name="tv_current_date">22/06-16</string>
 
 
+    <!-- Category Strings -->
+    <string-array name="category_income">
+        <item>Salary</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="category_expenditure">
+        <item>Accomodation</item>
+        <item>Food</item>
+        <item>Leisure</item>
+        <item>Travel</item>
+        <item>Other</item>
+    </string-array>
 
 
 </resources>

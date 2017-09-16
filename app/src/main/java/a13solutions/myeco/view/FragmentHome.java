@@ -32,4 +32,9 @@ public class FragmentHome extends Fragment implements FragmentMethods {
     public String getFrameNumberTag() {
         return ARG_FRAME_NUMBER;
     }
+
+    @Override
+    public void setDate() {
+
+    }
 }

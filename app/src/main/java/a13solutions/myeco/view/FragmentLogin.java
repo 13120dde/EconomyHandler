@@ -35,6 +35,11 @@ public class FragmentLogin extends Fragment implements FragmentMethods {
         return ARG_FRAME_NUMBER;
     }
 
+    @Override
+    public void setDate() {
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

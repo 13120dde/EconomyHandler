@@ -1,7 +1,11 @@
 package a13solutions.myeco.model;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+
+import java.util.Date;
 
 import a13solutions.myeco.MainActivity;
 

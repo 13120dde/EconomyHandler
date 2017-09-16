@@ -17,11 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a13solutions.myeco.adapter.SlidingMenuAdapter;
+import a13solutions.myeco.model.DataFragment;
 import a13solutions.myeco.view.FragmentHome;
+import a13solutions.myeco.view.FragmentListExpInc;
 import a13solutions.myeco.view.FragmentLogin;
 import a13solutions.myeco.view.FragmentMethods;
 import a13solutions.myeco.view.FragmentRegister;
-import a13solutions.myeco.view.FragmentTest;
+import a13solutions.myeco.view.FragmentAddExpInc;
 import a13solutions.myeco.model.ItemSlideMenu;
 
 /**The skeleton code for an app that shows all it's UI components in MainActivity's frame by
@@ -43,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
+    //Datafragment
+    DataFragment data;
+
+
     //Declaration of other variables
 
 
@@ -54,12 +60,22 @@ public class MainActivity extends AppCompatActivity {
         instantiateComponents();
 
         //populate the menu with a list containing ItemSlideMenu-objects.
+        initDataFragment();
         addItemsToSlidingList();
         setupListView();
         instantiateActionBar();
 
         if (savedInstanceState == null) {
             selectFragment(0);
+        }
+    }
+
+    private void initDataFragment() {
+        FragmentManager fm = getFragmentManager();
+        data = (DataFragment) fm.findFragmentByTag(DataFragment.DATA_TAG);
+        if(data==null){
+            data = new DataFragment();
+            fm.beginTransaction().add(data, DataFragment.DATA_TAG).commit();
         }
     }
 
@@ -108,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = getNewFragment(position);
         Bundle args = new Bundle();
         args.putInt(((FragmentMethods)fragment).getFrameNumberTag(), position);
+
         fragment.setArguments(args);
 
         FragmentManager fm = getFragmentManager();
@@ -168,7 +185,16 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new FragmentLogin();
                 break;
             case 3:
-                fragment = new FragmentTest();
+                fragment = new FragmentAddExpInc();
+                break;
+            case 4:
+                fragment = new FragmentAddExpInc();
+                break;
+            case 5:
+                fragment = new FragmentListExpInc();
+                break;
+            case 6:
+                fragment = new FragmentListExpInc();
                 break;
             default:
                 fragment = new FragmentHome();
@@ -185,7 +211,12 @@ public class MainActivity extends AppCompatActivity {
         listSliding.add(new ItemSlideMenu(R.drawable.ic_home, "Home"));
         listSliding.add(new ItemSlideMenu(R.drawable.ic_user_register, "Register"));
         listSliding.add(new ItemSlideMenu(R.drawable.ic_login, "Login"));
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_settings, "Settings"));
+        listSliding.add(new ItemSlideMenu(R.drawable.ic_money, "Add income"));
+        listSliding.add(new ItemSlideMenu(R.drawable.ic_expenditure, "Add expenditure"));
+        listSliding.add(new ItemSlideMenu(R.drawable.ic_list_inc, "Incomes"));
+        listSliding.add(new ItemSlideMenu(R.drawable.ic_list_exp, "Expenditures"));
+
+
 
     }
 
