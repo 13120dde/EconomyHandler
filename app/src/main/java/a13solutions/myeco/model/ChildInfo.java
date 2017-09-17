@@ -1,19 +1,24 @@
-package a13solutions.myeco.model;
+package a13solutions.myEco.model;
 
 /**
  * Created by 13120dde on 2017-09-16.
  */
 
 public class ChildInfo {
-    private String sequence = "";
     private String name = "";
+    private int position;
 
-    public String getSequence() {
-        return sequence;
+    public ChildInfo(String name, int position) {
+        this.name = name;
+        this.position=position;
     }
 
-    public void setSequence(String sequence) {
-        this.sequence = sequence;
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public String getName() {

@@ -1,4 +1,4 @@
-package a13solutions.myeco.adapter;
+package a13solutions.myEco.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import a13solutions.myeco.R;
-import a13solutions.myeco.model.ItemSlideMenu;
+import a13solutions.myEco.R;
+import a13solutions.myEco.model.ItemSlideMenu;
 
 /**
  * Created by 13120dde on 2017-09-12.

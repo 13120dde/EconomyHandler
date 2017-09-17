@@ -1,4 +1,4 @@
-package a13solutions.myeco.model;
+package a13solutions.myEco.model;
 
 import android.app.Fragment;
 import android.os.Bundle;

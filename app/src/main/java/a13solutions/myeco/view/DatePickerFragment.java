@@ -1,4 +1,4 @@
-package a13solutions.myeco.view;
+package a13solutions.myEco.view;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -9,8 +9,8 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 
-import a13solutions.myeco.R;
-import a13solutions.myeco.model.DataFragment;
+import a13solutions.myEco.R;
+import a13solutions.myEco.model.DataFragment;
 
 /**
  * Created by 13120dde on 2017-09-15.

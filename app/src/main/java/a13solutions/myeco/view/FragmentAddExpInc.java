@@ -1,12 +1,10 @@
-package a13solutions.myeco.view;
+package a13solutions.myEco.view;
 
 
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +16,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
-import a13solutions.myeco.R;
-import a13solutions.myeco.model.DataFragment;
+import a13solutions.myEco.R;
+import a13solutions.myEco.model.DataFragment;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentAddExpInc extends Fragment implements FragmentMethods {
-
-    public final String ARG_FRAME_NUMBER="frame_number";
+public class FragmentAddExpInc extends Fragment implements FragmentMethods{
 
     private EditText etTitle, etAmount;
     private Button btnAdd;
@@ -39,6 +35,7 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods {
 
     //Reuses UI for Expenditure and Income
     private int typeOfFragment;
+    private String fragmentTitle;
 
     public FragmentAddExpInc() {
         // Required empty public constructor
@@ -59,7 +56,8 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        typeOfFragment = getArguments().getInt(ARG_FRAME_NUMBER);
+        typeOfFragment = getArguments().getInt(getString(R.string.ARG_FRAGMENT_NUMBER));
+        fragmentTitle = getArguments().getString(getString(R.string.ARG_FRAGMENT_TITLE));
     }
 
     private void instantiateComponents(View rootView) {
@@ -77,17 +75,14 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods {
 
         ArrayAdapter<CharSequence> adapter = null;
 
-        //change header and spinner based on if this fragment is expenditure or income
-        switch (typeOfFragment){
-            case 3:
+        //change spinner based on if this fragment is expenditure or income
+        if (fragmentTitle.equals(getString(R.string.fragment_add_income))){
                 adapter = ArrayAdapter.createFromResource(getActivity(),
                         R.array.category_income, android.R.layout.simple_spinner_item);
-
-                break;
-            case 4:
-                adapter = ArrayAdapter.createFromResource(getActivity(),
-                        R.array.category_expenditure, android.R.layout.simple_spinner_item);
-                break;
+        }
+        if(fragmentTitle.equals(getString(R.string.fragment_add_expenditure))){
+            adapter = ArrayAdapter.createFromResource(getActivity(),
+                    R.array.category_expenditure, android.R.layout.simple_spinner_item);
         }
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -97,7 +92,6 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods {
     public void setDate() {
 
         DataFragment dataFragment = (DataFragment) getActivity().getFragmentManager().findFragmentByTag(DataFragment.DATA_TAG);
-
         tvDate.setText(dataFragment.getChosenDate());
     }
 
@@ -138,24 +132,16 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods {
                 amount = etAmount.getText().toString();
                 date = tvDate.getText().toString();
 
-                //check if this fragment is income or expenditure
-                switch (typeOfFragment){
-                    //income
-                    case 3:
-                        //TODO ADD to dbIncome
-                        break;
-                    //expenditure
-                    case 4:
-                        //TODO add to dbExpenditure
-                        break;
+                if (fragmentTitle.equals(getString(R.string.fragment_add_income))){
+                    //TODO add to dbIncome
+                }
+                if(fragmentTitle.equals(getString(R.string.fragment_add_expenditure))){
+                    //TODO add to dbExpenditure
                 }
             }
         });
 
     }
-    @Override
-    public String getFrameNumberTag() {
-        return ARG_FRAME_NUMBER;
-    }
+
 
 }

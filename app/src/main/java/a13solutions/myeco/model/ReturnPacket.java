@@ -1,4 +1,4 @@
-package a13solutions.myeco.model;
+package a13solutions.myEco.model;
 
 /**
  * Created by 13120dde on 2017-09-13.

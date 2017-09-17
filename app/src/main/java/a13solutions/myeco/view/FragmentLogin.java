@@ -1,4 +1,4 @@
-package a13solutions.myeco.view;
+package a13solutions.myEco.view;
 
 
 import android.os.Bundle;
@@ -10,17 +10,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import a13solutions.myeco.MainActivity;
-import a13solutions.myeco.R;
-import a13solutions.myeco.model.DialogManager;
-import a13solutions.myeco.model.LogicLogin;
+import a13solutions.myEco.MainActivity;
+import a13solutions.myEco.R;
+import a13solutions.myEco.model.DialogManager;
+import a13solutions.myEco.model.LogicLogin;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FragmentLogin extends Fragment implements FragmentMethods {
-
-    public final String ARG_FRAME_NUMBER="frame_number";
 
     private EditText etEmail, etPassword;
     private TextView tvForgotPassword;
@@ -28,11 +26,6 @@ public class FragmentLogin extends Fragment implements FragmentMethods {
 
     public FragmentLogin() {
         // Required empty public constructor
-    }
-
-    @Override
-    public String getFrameNumberTag() {
-        return ARG_FRAME_NUMBER;
     }
 
     @Override
@@ -75,6 +68,7 @@ public class FragmentLogin extends Fragment implements FragmentMethods {
                         etPassword.setText("");
                     }else{
                         //proceed to homefragment and set some data
+                        ((MainActivity) getActivity()).showHomeFragment();
                     }
                     break;
                 case R.id.tv_forgot_password:

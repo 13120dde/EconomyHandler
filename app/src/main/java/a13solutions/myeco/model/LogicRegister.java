@@ -1,6 +1,13 @@
-package a13solutions.myeco.model;
+package a13solutions.myEco.model;
 
-import a13solutions.myeco.MainActivity;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import a13solutions.myEco.MainActivity;
+import a13solutions.myEco.R;
+import a13solutions.myEco.dbHelpers.DBMethods;
+import a13solutions.myEco.dbHelpers.UserDBHelper;
 
 /**
  * Created by 13120dde on 2017-09-13.
@@ -9,9 +16,13 @@ import a13solutions.myeco.MainActivity;
 public class LogicRegister {
 
     private MainActivity activity;
+    private DBMethods dbMethods;
+
 
     public LogicRegister(MainActivity activity) {
         this.activity=activity;
+        dbMethods = new DBMethods(activity);
+
     }
 
     /**Validates the password to match the password requirements. The requirements are: minlength=8,
@@ -66,8 +77,10 @@ public class LogicRegister {
         String message="";
         boolean isSuccess=true;
         if(android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            //TODO: check if email is already registered in DB
-
+            if(dbMethods.getUserEmail(email).equalsIgnoreCase(email)){
+                isSuccess =false;
+                message+="This email is already registered";
+            }
         }else{
             isSuccess=false;
             message+="Incorrect email format";
@@ -101,7 +114,9 @@ public class LogicRegister {
         }
 
         if(allSuccessfull){
+            dbMethods.registerUser(email,password,firstName,surname);
             resultInfo="Registration complete.\nProcede to login.";
+            activity.showHomeFragment();
         }
 
         DialogManager.showNeutralDialog(resultTitle,resultInfo, activity);

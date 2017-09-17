@@ -1,5 +1,6 @@
-package a13solutions.myeco;
+package a13solutions.myEco;
 
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -7,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,15 +18,15 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import a13solutions.myeco.adapter.SlidingMenuAdapter;
-import a13solutions.myeco.model.DataFragment;
-import a13solutions.myeco.view.FragmentHome;
-import a13solutions.myeco.view.FragmentListExpInc;
-import a13solutions.myeco.view.FragmentLogin;
-import a13solutions.myeco.view.FragmentMethods;
-import a13solutions.myeco.view.FragmentRegister;
-import a13solutions.myeco.view.FragmentAddExpInc;
-import a13solutions.myeco.model.ItemSlideMenu;
+import a13solutions.myEco.adapter.SlidingMenuAdapter;
+import a13solutions.myEco.model.DataFragment;
+import a13solutions.myEco.view.FragmentHome;
+import a13solutions.myEco.view.FragmentListExpInc;
+import a13solutions.myEco.view.FragmentLogin;
+import a13solutions.myEco.view.FragmentMethods;
+import a13solutions.myEco.view.FragmentRegister;
+import a13solutions.myEco.view.FragmentAddExpInc;
+import a13solutions.myEco.model.ItemSlideMenu;
 
 /**The skeleton code for an app that shows all it's UI components in MainActivity's frame by
  * chosing an item to show from the sliding-menu implemented in this project.
@@ -37,13 +39,13 @@ import a13solutions.myeco.model.ItemSlideMenu;
  */
 public class MainActivity extends AppCompatActivity {
 
-
     //Objects needed for the sliding-menu
     private List<ItemSlideMenu> listSliding;
     private SlidingMenuAdapter adapter;
     private ListView listViewSliding;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+    private SharedPreferences sp;
 
     //Datafragment
     DataFragment data;
@@ -59,15 +61,35 @@ public class MainActivity extends AppCompatActivity {
         //Init components
         instantiateComponents();
 
+        sp = this.getSharedPreferences(getString(R.string.ECONOMYHANDLER_USER_DATA), this.MODE_PRIVATE);
+
+        //first time app running
+        if(sp==null){
+            initOnFirstTimeRunningComponents();
+        }
+
         //populate the menu with a list containing ItemSlideMenu-objects.
         initDataFragment();
+
+
         addItemsToSlidingList();
         setupListView();
         instantiateActionBar();
 
         if (savedInstanceState == null) {
-            selectFragment(0);
+            selectFragment(0, listSliding.get(0).getTitle());
         }
+    }
+
+    public void showHomeFragment() {
+        selectFragment(0, listSliding.get(0).getTitle());
+    }
+
+    private void initOnFirstTimeRunningComponents() {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(getString(R.string.USER_IS_LOGGEDIN), false);
+        editor.commit();
+        //TODO CREATE SQLTABLEs
     }
 
     private void initDataFragment() {
@@ -113,24 +135,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                selectFragment(position);
+
+                if(listSliding.get(position).getTitle().equals(getString(R.string.fragment_logout))){
+                    logout();
+                    selectFragment(0, listSliding.get(0).getTitle());
+                }else{
+                    selectFragment(position, listSliding.get(position).getTitle());
+                }
 
 
             }
         });
     }
 
-    public void selectFragment(int position) {
-        Fragment fragment = getNewFragment(position);
-        Bundle args = new Bundle();
-        args.putInt(((FragmentMethods)fragment).getFrameNumberTag(), position);
+    private void logout() {
 
-        fragment.setArguments(args);
+        Log.d("IN_LOGOUT","Logout pressed");
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(getString(R.string.USER_IS_LOGGEDIN), false);
+        editor.commit();
+        addItemsToSlidingList();
+    }
+
+    public void selectFragment(int position, String fragmentTitle) {
+        Fragment fragment = getNewFragment(fragmentTitle, position);
 
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.main_content,fragment).commit();
 
-        setTitle(listSliding.get(position).getTitle());
+        setTitle(fragmentTitle);
         listViewSliding.setItemChecked(position,true);
         drawerLayout.closeDrawer(listViewSliding);
     }
@@ -166,58 +199,69 @@ public class MainActivity extends AppCompatActivity {
     /**Rnstantiate and return a new fragment. The type of fragment returned is based on the int
      * passed in as argument.
      *
-     * @param position : int
+     * @param fragmentTitle : int
      *@return fragment : Fragment
      */
-    public Fragment getNewFragment(int position) {
+    public Fragment getNewFragment(String fragmentTitle, int position) {
 
         Fragment fragment = null;
+        Bundle args = new Bundle();
 
-        //Add new Fragments to show here.
-        switch (position) {
-            case 0:
-                fragment = new FragmentHome();
-                break;
-            case 1:
-                fragment = new FragmentRegister();
-                break;
-            case 2:
-                fragment = new FragmentLogin();
-                break;
-            case 3:
-                fragment = new FragmentAddExpInc();
-                break;
-            case 4:
-                fragment = new FragmentAddExpInc();
-                break;
-            case 5:
-                fragment = new FragmentListExpInc();
-                break;
-            case 6:
-                fragment = new FragmentListExpInc();
-                break;
-            default:
-                fragment = new FragmentHome();
-                break;
+        if(fragmentTitle.equals(getString(R.string.fragment_home))){
+            fragment = new FragmentHome();
+        }if(fragmentTitle.equals(getString(R.string.fragment_add_income))){
+            fragment = new FragmentAddExpInc();
+            args.putString(getString(R.string.ARG_FRAGMENT_TITLE),getString(R.string.fragment_add_income));
+        }if(fragmentTitle.equals(getString(R.string.fragment_add_expenditure))){
+            fragment = new FragmentAddExpInc();
+            args.putString(getString(R.string.ARG_FRAGMENT_TITLE),getString(R.string.fragment_add_expenditure));
+        }if(fragmentTitle.equals(getString(R.string.fragment_incomes))){
+            fragment = new FragmentListExpInc();
+            args.putString(getString(R.string.ARG_FRAGMENT_TITLE),getString(R.string.fragment_incomes));
+        }if(fragmentTitle.equals(getString(R.string.fragment_expenditures))){
+            fragment = new FragmentListExpInc();
+            args.putString(getString(R.string.ARG_FRAGMENT_TITLE),getString(R.string.fragment_expenditures));
+
+        }if(fragmentTitle.equals(getString(R.string.fragment_register))){
+            fragment = new FragmentRegister();
+        }if(fragmentTitle.equals(getString(R.string.fragment_login))){
+            fragment = new FragmentLogin();
+        }if(fragmentTitle.equals(getString(R.string.fragment_logout))){
+            fragment = new FragmentHome();
         }
+        args.putInt(getString(R.string.ARG_FRAGMENT_NUMBER), position);
+        fragment.setArguments(args);
         return fragment;
     }
 
     /**Populates the List-object passed in as arguments with new menu-items. Returns the populated
-     * list.
+     * list.*
      */
     public void addItemsToSlidingList() {
 
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_home, "Home"));
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_user_register, "Register"));
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_login, "Login"));
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_money, "Add income"));
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_expenditure, "Add expenditure"));
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_list_inc, "Incomes"));
-        listSliding.add(new ItemSlideMenu(R.drawable.ic_list_exp, "Expenditures"));
+        boolean loggedin = sp.getBoolean(getString(R.string.USER_IS_LOGGEDIN), false);
+
+        if(!listSliding.isEmpty()){
+            listSliding.clear();
+        }
+
+        listSliding.add(new ItemSlideMenu(R.drawable.ic_home, getString(R.string.fragment_home)));
+        if(loggedin){
+            listSliding.add(new ItemSlideMenu(R.drawable.ic_money, getString(R.string.fragment_add_income)));
+            listSliding.add(new ItemSlideMenu(R.drawable.ic_expenditure, getString(R.string.fragment_add_expenditure)));
+            listSliding.add(new ItemSlideMenu(R.drawable.ic_list_inc, getString(R.string.fragment_incomes)));
+            listSliding.add(new ItemSlideMenu(R.drawable.ic_list_exp, getString(R.string.fragment_expenditures)));
+            listSliding.add (new ItemSlideMenu(R.drawable.ic_logout, getString(R.string.fragment_logout)));
+
+        }else{
+            listSliding.add(new ItemSlideMenu(R.drawable.ic_user_register, getString(R.string.fragment_register)));
+            listSliding.add(new ItemSlideMenu(R.drawable.ic_login, getString(R.string.fragment_login)));
+        }
+
 
 
 
     }
+
 
 }
