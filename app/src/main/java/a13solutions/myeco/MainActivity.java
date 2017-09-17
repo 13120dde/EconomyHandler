@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void selectFragment(int position, String fragmentTitle) {
+        hideKeyboard();
         Fragment fragment = getNewFragment(fragmentTitle, position);
 
         FragmentManager fm = getFragmentManager();
@@ -261,9 +263,16 @@ public class MainActivity extends AppCompatActivity {
             listSliding.add(new ItemSlideMenu(R.drawable.ic_user_register, getString(R.string.fragment_register)));
             listSliding.add(new ItemSlideMenu(R.drawable.ic_login, getString(R.string.fragment_login)));
         }
+    }
 
+    public void hideKeyboard(){
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
-
+        View v = getCurrentFocus();
+        if(v==null){
+            return;
+        }
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(),0);
 
     }
 

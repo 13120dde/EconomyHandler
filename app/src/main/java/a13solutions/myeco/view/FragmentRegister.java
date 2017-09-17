@@ -55,6 +55,7 @@ public class FragmentRegister extends Fragment implements FragmentMethods{
                    etFirstName.setText("");
                    etSurname.setText("");
                }
+
             }
         });
     }

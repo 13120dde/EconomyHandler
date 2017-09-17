@@ -16,7 +16,7 @@ import a13solutions.myEco.model.DialogManager;
 import a13solutions.myEco.model.LogicLogin;
 
 /**
- * A simple {@link Fragment} subclass.
+ *
  */
 public class FragmentLogin extends Fragment implements FragmentMethods {
 
@@ -67,11 +67,10 @@ public class FragmentLogin extends Fragment implements FragmentMethods {
                         etEmail.setText("");
                         etPassword.setText("");
                     }
+
                     break;
                 case R.id.tv_forgot_password:
                     DialogManager.showNeutralDialog("TODO","implement reset password", (MainActivity) getActivity());
-                    break;
-                default:
                     break;
             }
         }
