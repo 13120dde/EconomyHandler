@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.R;
-import a13solutions.myEco.dbHelpers.DBMethods;
+import a13solutions.myEco.dbHelpers.DBManager;
 import a13solutions.myEco.dbHelpers.UserDBHelper;
 
 /**
@@ -28,8 +28,8 @@ public class LogicLogin {
 
     public boolean login(String email, String password) {
 
-        DBMethods dbMethods = new DBMethods(activity);
-        ReturnPacket res = dbMethods.login(email,password);
+        DBManager dbManager = new DBManager(activity);
+        ReturnPacket res = dbManager.login(email);
 
         if(res.isSuccess()){
             HashMap<String, String> vals = res.getVals();
@@ -48,11 +48,11 @@ public class LogicLogin {
                 activity.showHomeFragment();
                 return true;
             }else{
-                DialogManager.showNeutralDialog("Error", "Passwords don't match.", activity);
+                UtlilityMethods.showNeutralDialog("Error", "Passwords don't match.", activity);
             }
 
         }else{
-            DialogManager.showNeutralDialog("Error", res.getMessage(), activity);
+            UtlilityMethods.showNeutralDialog("Error", res.getMessage(), activity);
         }
 
 

@@ -16,8 +16,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
+import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.R;
 import a13solutions.myEco.model.DataFragment;
+import a13solutions.myEco.model.LogicAddExpInc;
+import a13solutions.myEco.model.ReturnPacket;
 
 
 /**
@@ -36,6 +39,7 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
     //Reuses UI for Expenditure and Income
     private int typeOfFragment;
     private String fragmentTitle;
+    private LogicAddExpInc logicAddExpInc;
 
     public FragmentAddExpInc() {
         // Required empty public constructor
@@ -58,6 +62,7 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
         super.onCreate(savedInstanceState);
         typeOfFragment = getArguments().getInt(getString(R.string.ARG_FRAGMENT_NUMBER));
         fragmentTitle = getArguments().getString(getString(R.string.ARG_FRAGMENT_TITLE));
+        logicAddExpInc = new LogicAddExpInc(((MainActivity)getActivity()), fragmentTitle);
     }
 
     private void instantiateComponents(View rootView) {
@@ -127,17 +132,16 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
             @Override
             public void onClick(View view) {
 
-
                 title = etTitle.getText().toString();
                 amount = etAmount.getText().toString();
                 date = tvDate.getText().toString();
 
-                if (fragmentTitle.equals(getString(R.string.fragment_add_income))){
-                    //TODO add to dbIncome
-                }
-                if(fragmentTitle.equals(getString(R.string.fragment_add_expenditure))){
-                    //TODO add to dbExpenditure
-                }
+                if(logicAddExpInc.addToDb(title, category, date, amount)){
+                    etAmount.setText("");
+                    etTitle.setText("");
+                    ((MainActivity) getActivity()).hideKeyboard();
+                };
+
             }
         });
 

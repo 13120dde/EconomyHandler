@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.R;
-import a13solutions.myEco.model.DialogManager;
+import a13solutions.myEco.model.UtlilityMethods;
 import a13solutions.myEco.model.LogicLogin;
 
 /**
@@ -70,7 +70,7 @@ public class FragmentLogin extends Fragment implements FragmentMethods {
 
                     break;
                 case R.id.tv_forgot_password:
-                    DialogManager.showNeutralDialog("TODO","implement reset password", (MainActivity) getActivity());
+                    UtlilityMethods.showNeutralDialog("TODO","implement reset password", (MainActivity) getActivity());
                     break;
             }
         }

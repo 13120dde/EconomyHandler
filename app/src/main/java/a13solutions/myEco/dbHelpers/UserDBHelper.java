@@ -19,9 +19,9 @@ public class UserDBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME ="economyhandler.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String DATABASE_CREATE = "create table "+TABLE_NAME+"("
-            +COLUMN_EMAIL+" text not null primary key, "+COLUMN_PASSWORD+" text not null, "
-            +COLUMN_FIRST_NAME+" text not null, "+COLUMN_SURNAME+" text not null );";
+    private static final String DATABASE_CREATE = "CREATE TABLE "+TABLE_NAME+"("
+            +COLUMN_EMAIL+" TEXT NOT NULL PRIMARY KEY, "+COLUMN_PASSWORD+" TEXT NOT NULL, "
+            +COLUMN_FIRST_NAME+" TEXT NOT NULL, "+COLUMN_SURNAME+" TEXT NOT NULL );";
 
 
     public UserDBHelper(Context context) {
@@ -36,6 +36,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
+        //TODO handle migration of data
         onCreate(sqLiteDatabase);
     }
 }

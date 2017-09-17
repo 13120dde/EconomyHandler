@@ -1,13 +1,7 @@
 package a13solutions.myEco.model;
 
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
 import a13solutions.myEco.MainActivity;
-import a13solutions.myEco.R;
-import a13solutions.myEco.dbHelpers.DBMethods;
-import a13solutions.myEco.dbHelpers.UserDBHelper;
+import a13solutions.myEco.dbHelpers.DBManager;
 
 /**
  * Created by 13120dde on 2017-09-13.
@@ -16,12 +10,12 @@ import a13solutions.myEco.dbHelpers.UserDBHelper;
 public class LogicRegister {
 
     private MainActivity activity;
-    private DBMethods dbMethods;
+    private DBManager dbManager;
 
 
     public LogicRegister(MainActivity activity) {
         this.activity=activity;
-        dbMethods = new DBMethods(activity);
+        dbManager = new DBManager(activity);
 
     }
 
@@ -77,7 +71,7 @@ public class LogicRegister {
         String message="";
         boolean isSuccess=true;
         if(android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            ReturnPacket res = dbMethods.getUserEmail(email);
+            ReturnPacket res = dbManager.getUserEmail(email);
             if(res.isSuccess()){
                 isSuccess =false;
                 message+=res.getMessage()+"is already registered";
@@ -115,12 +109,12 @@ public class LogicRegister {
         }
 
         if(allSuccessfull){
-            dbMethods.registerUser(email,password,firstName,surname);
+            dbManager.registerUser(email,password,firstName,surname);
             resultInfo="Registration complete.\nProcede to login.";
             activity.showHomeFragment();
         }
 
-        DialogManager.showNeutralDialog(resultTitle,resultInfo, activity);
+        UtlilityMethods.showNeutralDialog(resultTitle,resultInfo, activity);
         return allSuccessfull;
     }
 }
