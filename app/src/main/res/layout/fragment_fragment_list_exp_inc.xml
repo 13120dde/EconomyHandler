@@ -3,72 +3,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="a13solutions.myeco.view.FragmentListExpInc">
+    tools:context="a13solutions.myEco.view.FragmentListExpIncN">
 
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
-        android:id="@+id/containerMain"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintBottom_toTopOf="@+id/containerSummary">
-
-        <LinearLayout
-            android:id="@+id/containerDates"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <TextView
-                android:id="@+id/tvDateFrom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textAlignment="center"
-                android:textColor="@color/colorBlue"
-                android:textSize="18sp"
-                android:textStyle="italic" />
-
-            <TextView
-                android:id="@+id/tvDateTo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textAlignment="center"
-                android:textColor="@color/colorBlue"
-                android:textSize="18sp"
-                android:textStyle="italic" />
-        </LinearLayout>
+        android:id="@+id/containerForDates"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp">
 
         <TextView
-            android:id="@+id/tvSeperator"
-            android:layout_width="match_parent"
+            android:id="@+id/tvDateFrom"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorPurple"/>
+            android:layout_weight="1"
+            android:textAlignment="viewStart"
+            android:textColor="@color/colorBlue"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:paddingLeft="10dp"/>
 
-        <ExpandableListView
-            android:id="@+id/lvEpandableList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/colorPurple"
-            android:listSelector="@color/colorBlue"
-            android:dividerHeight="1dp"/>
-
+        <TextView
+            android:id="@+id/tvDateTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/colorBlue"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:paddingRight="10dp"/>
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/btnExpandCollapseAll"
+        style="@android:style/Widget.DeviceDefault.Light.ImageButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="false"
+        android:background="@color/colorPurple"
+        android:elevation="4dp"
+        android:scaleType="fitEnd"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/containerForDates"
+        app:srcCompat="@drawable/ic_expand_white"
+        android:paddingRight="10dp"/>
+
     <LinearLayout
-        android:id="@+id/containerSummary"
+        android:id="@+id/bottomFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -78,13 +72,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@color/colorPurple"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp">
 
         <TextView
             android:id="@+id/tvBottom"
@@ -92,16 +84,36 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textAlignment="viewStart"
-            android:textColor="@android:color/background_light" />
+            android:textColor="@android:color/background_light"
+            android:textSize="18sp"
+            />
 
         <TextView
             android:id="@+id/tvSummary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="2568"
             android:textAlignment="viewEnd"
             android:textColor="@android:color/background_light"
-            android:textStyle="bold" />
+            android:textSize="24sp"
+            android:textStyle="bold|italic" />
     </LinearLayout>
 
+    <ExpandableListView
+        android:id="@+id/lvEpandableList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomFragment"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnExpandCollapseAll"
+        app:layout_constraintVertical_bias="0.0"
+        android:paddingRight="10dp"
+        />
 </android.support.constraint.ConstraintLayout>

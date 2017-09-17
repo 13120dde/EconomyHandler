@@ -1,38 +1,35 @@
-package a13solutions.myeco.adapter;
+package a13solutions.myEco.adapter;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import a13solutions.myeco.R;
-import a13solutions.myeco.model.ChildInfo;
-import a13solutions.myeco.model.GroupInfo;
+import a13solutions.myEco.R;
+import a13solutions.myEco.model.ChildInfo;
+import a13solutions.myEco.model.ListItemInfo;
 
 /**
  * Created by 13120dde on 2017-09-16.
  */
 
-public class CustomAdapter extends BaseExpandableListAdapter{
+public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
 
     private Context context;
-    private ArrayList<GroupInfo> deptList;
+    private ArrayList<ListItemInfo> listItemInfo;
 
-    public CustomAdapter(Context context, ArrayList<GroupInfo> deptList) {
+    public ExpandableListViewAdapter(Context context, ArrayList<ListItemInfo> listItemInfo) {
         this.context = context;
-        this.deptList = deptList;
+        this.listItemInfo = listItemInfo;
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        ArrayList<ChildInfo> productList = deptList.get(groupPosition).getProductList();
-        return productList.get(childPosition);
+        return listItemInfo.get(groupPosition).getChild(childPosition);
     }
 
     @Override
@@ -50,9 +47,7 @@ public class CustomAdapter extends BaseExpandableListAdapter{
             view = infalInflater.inflate(R.layout.child_items, null);
         }
 
-        TextView sequence = (TextView) view.findViewById(R.id.sequence);
-        sequence.setText(detailInfo.getSequence().trim() + ". ");
-        TextView childItem = (TextView) view.findViewById(R.id.childItem);
+        TextView childItem = (TextView) view.findViewById(R.id.tvCategoryCreated);
         childItem.setText(detailInfo.getName().trim());
 
         return view;
@@ -60,20 +55,18 @@ public class CustomAdapter extends BaseExpandableListAdapter{
 
     @Override
     public int getChildrenCount(int groupPosition) {
-
-        ArrayList<ChildInfo> productList = deptList.get(groupPosition).getProductList();
-        return productList.size();
-
+        return listItemInfo.get(groupPosition).getChildren().size();
     }
 
+    
     @Override
     public Object getGroup(int groupPosition) {
-        return deptList.get(groupPosition);
+        return listItemInfo.get(groupPosition);
     }
 
     @Override
     public int getGroupCount() {
-        return deptList.size();
+        return listItemInfo.size();
     }
 
     @Override
@@ -85,14 +78,14 @@ public class CustomAdapter extends BaseExpandableListAdapter{
     public View getGroupView(int groupPosition, boolean isLastChild, View view,
                              ViewGroup parent) {
 
-        GroupInfo headerInfo = (GroupInfo) getGroup(groupPosition);
+        ListItemInfo headerInfo = (ListItemInfo) getGroup(groupPosition);
         if (view == null) {
             LayoutInflater inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inf.inflate(R.layout.group_items, null);
         }
 
-        TextView heading = (TextView) view.findViewById(R.id.heading);
-        heading.setText(headerInfo.getName().trim());
+        TextView heading = (TextView) view.findViewById(R.id.tvListItemHeader);
+        heading.setText(headerInfo.getTitle().trim());
 
         return view;
     }
@@ -104,6 +97,9 @@ public class CustomAdapter extends BaseExpandableListAdapter{
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
+        return false;
+    }
+
+    public void changeIcon(int i) {
     }
 }

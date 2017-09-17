@@ -4,19 +4,19 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/sequence"
+        android:id="@+id/tvDateCreated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:paddingLeft="35sp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
-        android:id="@+id/childItem"
+        android:id="@+id/tvCategoryCreated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/sequence"
+        android:layout_toRightOf="@id/tvDateCreated"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </LinearLayout>

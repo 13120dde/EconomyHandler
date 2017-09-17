@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="a13solutions.myeco">
+    package="a13solutions.myEco">
 
     <application
         android:allowBackup="true"
