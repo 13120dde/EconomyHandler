@@ -66,9 +66,6 @@ public class FragmentLogin extends Fragment implements FragmentMethods {
                     if(!loggedIn){
                         etEmail.setText("");
                         etPassword.setText("");
-                    }else{
-                        //proceed to homefragment and set some data
-                        ((MainActivity) getActivity()).showHomeFragment();
                     }
                     break;
                 case R.id.tv_forgot_password:

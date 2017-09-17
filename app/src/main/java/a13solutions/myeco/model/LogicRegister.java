@@ -77,9 +77,10 @@ public class LogicRegister {
         String message="";
         boolean isSuccess=true;
         if(android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            if(dbMethods.getUserEmail(email).equalsIgnoreCase(email)){
+            ReturnPacket res = dbMethods.getUserEmail(email);
+            if(res.isSuccess()){
                 isSuccess =false;
-                message+="This email is already registered";
+                message+=res.getMessage()+"is already registered";
             }
         }else{
             isSuccess=false;

@@ -150,9 +150,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void logout() {
 
-        Log.d("IN_LOGOUT","Logout pressed");
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(getString(R.string.USER_IS_LOGGEDIN), false);
+        editor.remove(getString(R.string.USER_FIRST_NAME));
+        editor.remove(getString(R.string.USER_SURNAME));
+        editor.remove(getString(R.string.USER_EMAIL));
+        editor.remove(getString(R.string.USER_PASSWORD));
+
         editor.commit();
         addItemsToSlidingList();
     }

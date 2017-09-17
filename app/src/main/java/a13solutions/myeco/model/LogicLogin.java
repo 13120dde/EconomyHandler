@@ -2,8 +2,12 @@ package a13solutions.myEco.model;
 
 import android.content.SharedPreferences;
 
+import java.util.HashMap;
+
 import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.R;
+import a13solutions.myEco.dbHelpers.DBMethods;
+import a13solutions.myEco.dbHelpers.UserDBHelper;
 
 /**
  * Created by 13120dde on 2017-09-14.
@@ -15,6 +19,7 @@ public class LogicLogin {
     private SharedPreferences sp;
 
 
+
     public LogicLogin(MainActivity activity) {
         this.activity=activity;
         sp = activity.getSharedPreferences(activity.getString(R.string.ECONOMYHANDLER_USER_DATA), activity.MODE_PRIVATE);
@@ -23,14 +28,35 @@ public class LogicLogin {
 
     public boolean login(String email, String password) {
 
-        //TODO implement check if user in db, also dialog if incorrect
+        DBMethods dbMethods = new DBMethods(activity);
+        ReturnPacket res = dbMethods.login(email,password);
 
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(activity.getString(R.string.USER_IS_LOGGEDIN), true);
-        editor.commit();
-        activity.addItemsToSlidingList();
+        if(res.isSuccess()){
+            HashMap<String, String> vals = res.getVals();
 
-        return true;
+            if(vals.get(UserDBHelper.COLUMN_PASSWORD).equals(password)){
+
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean(activity.getString(R.string.USER_IS_LOGGEDIN), true);
+                editor.putString(activity.getString(R.string.USER_FIRST_NAME), vals.get(UserDBHelper.COLUMN_FIRST_NAME));
+                editor.putString(activity.getString(R.string.USER_SURNAME), vals.get(UserDBHelper.COLUMN_SURNAME));
+                editor.putString(activity.getString(R.string.USER_EMAIL), email);
+                editor.putString(activity.getString(R.string.USER_PASSWORD),password);
+
+                editor.commit();
+                activity.addItemsToSlidingList();
+                activity.showHomeFragment();
+                return true;
+            }else{
+                DialogManager.showNeutralDialog("Error", "Passwords don't match.", activity);
+            }
+
+        }else{
+            DialogManager.showNeutralDialog("Error", res.getMessage(), activity);
+        }
+
+
+        return false;
     }
 
 }
