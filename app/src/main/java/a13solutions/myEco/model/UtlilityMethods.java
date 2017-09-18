@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import java.text.DecimalFormat;
+
 import a13solutions.myEco.MainActivity;
 
 /**
@@ -56,5 +58,11 @@ public class UtlilityMethods {
             nextMonth =1;
         }
         return formatDate(nextYear,nextMonth,day);
+    }
+
+    public static String round(double amount) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        String s = df.format(amount);
+        return s;
     }
 }

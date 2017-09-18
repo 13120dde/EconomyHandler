@@ -25,6 +25,7 @@ public class DataFragment extends Fragment{
 
     private final String LOG_TAG="IN_DATA";
     public static final String DATA_TAG="data";
+    MainActivity activity;
 
     private String date, chosenDate, dateFrom, dateTo;
     private double totalExpenditureAmount, totalIncomeAmount;
@@ -81,17 +82,35 @@ public class DataFragment extends Fragment{
         dateTo = UtlilityMethods.addOneMonth(date);
 
         //Load some initial data from db
-        MainActivity activity = (MainActivity) getActivity();
+        activity = (MainActivity) getActivity();
         Resources res = activity.getResources();
         SharedPreferences sp = activity.getSharedPreferences(activity.getString(R.string.ECONOMYHANDLER_USER_DATA),
                 activity.MODE_PRIVATE);
         String email = sp.getString(res.getString(R.string.USER_EMAIL), "");
-        listIncome = new ArrayList<ExpIncItem>();
-        listExpenditure = new ArrayList<ExpIncItem>();
-        listIncome= new DBManager(activity).getIncomes(email,dateFrom,dateTo,listIncome);
-        listExpenditure = new DBManager(activity).getExpenditures(email,dateFrom,dateTo,listExpenditure);
+        getExpendituresFromDb(email,dateFrom,dateTo);
+        getIncomesFromDb(email,dateFrom,dateTo);
+
         //printArray(listIncome);
         printArray(listExpenditure);
+    }
+
+    public void getIncomesFromDb(String email, String dateFrom, String dateTo){
+        listIncome = new ArrayList<>();
+        listIncome= new DBManager(activity).getIncomes(email,dateFrom,dateTo,listIncome);
+        ExpIncItem totalAmount = listIncome.remove(listIncome.size()-1);
+        if(totalAmount!=null){
+            totalIncomeAmount = totalAmount.getAmount();
+        }
+
+    }
+
+    public void getExpendituresFromDb(String email, String dateFrom, String dateTo){
+        listIncome = new ArrayList<ExpIncItem>();
+        listExpenditure = new DBManager(activity).getExpenditures(email,dateFrom,dateTo,listExpenditure);
+        ExpIncItem totalAmount = listIncome.remove(listIncome.size()-1);
+        if(totalAmount!=null){
+            totalIncomeAmount = totalAmount.getAmount();
+        }
     }
 
     private void printArray(ArrayList<ExpIncItem> listExpenditure) {

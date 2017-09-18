@@ -139,6 +139,7 @@ public final class DBManager {
         dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getReadableDatabase();
         int index = 0;
+        double totalAmount=0;
 
         cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
                 +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE+", "+EX_INC_COLUMN_ID
@@ -156,8 +157,11 @@ public final class DBManager {
             int key = cursor.getInt(cursor.getColumnIndex(EX_INC_COLUMN_ID));
             expenditureArray.add(new ExpIncItem(title,category,date,amount,key,index));
             index++;
+            totalAmount+=amount;
         }
 
+        //just to skip iterating trough array later to calculate total amount
+        expenditureArray.add(new ExpIncItem("","","",totalAmount,0,0));
         return expenditureArray;
     }
 
@@ -165,6 +169,7 @@ public final class DBManager {
         dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getReadableDatabase();
         int index = 0;
+        double totalAmount=0;
 
         cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
                         +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE+", "+EX_INC_COLUMN_ID
@@ -181,8 +186,11 @@ public final class DBManager {
             int key = cursor.getInt(cursor.getColumnIndex(EX_INC_COLUMN_ID));
             incomeArray.add(new ExpIncItem(title,category,date,amount,key,index));
             index++;
+            totalAmount+=amount;
         }
 
+        //just to skip iterating trough array later to calculate total amount
+        incomeArray.add(new ExpIncItem("","","",totalAmount,0,0));
         return incomeArray;
     }
 }

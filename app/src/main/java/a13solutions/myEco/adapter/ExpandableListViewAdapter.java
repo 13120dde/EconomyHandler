@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import a13solutions.myEco.R;
@@ -87,7 +88,9 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
         TextView heading = (TextView) view.findViewById(R.id.tvListItemHeader);
         TextView amount = (TextView) view.findViewById(R.id.tvItemAmount);
         heading.setText(headerInfo.getTitle().trim());
-        amount.setText(Double.toString(headerInfo.getAmount()));
+
+
+        amount.setText(headerInfo.getAmount());
 
         return view;
     }

@@ -86,7 +86,7 @@ public class LogicAddExpInc {
         String date="";
 
         //DATE AND AMOUNT TOO
-        for(int i = 0; i<1000; i++){
+        for(int i = 0; i<100; i++){
             String category="", title="";
             int[] dmy = getRandomDate();
             date = UtlilityMethods.formatDate(dmy[0],dmy[1],dmy[2]);
@@ -132,18 +132,15 @@ public class LogicAddExpInc {
 
     private double getRandomAmount(int i) {
 
-        double r =(new Random().nextDouble()+(new Random().nextInt(9)+1))*i;
-        DecimalFormat df = new DecimalFormat("#.##");
-        df.format(r);
+        return (new Random().nextDouble()+(new Random().nextInt(9)+1))*i;
 
-        return Double.parseDouble(df.format(r));
     }
 
     private int[] getRandomDate() {
         int dmy[] = new int[3];
         dmy[2] = new Random().nextInt(31)+1;
         dmy[1] = new Random().nextInt(12)+1;
-        dmy[0] = new Random().nextInt(18)+2000;
+        dmy[0] = 2017;
         return dmy;
     }
 
