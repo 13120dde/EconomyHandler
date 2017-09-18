@@ -16,7 +16,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_FIRST_NAME = "first_name";
     public static final String COLUMN_SURNAME = "surname";
 
-    private static final String DATABASE_NAME ="economyhandler.db";
+    private static final String DATABASE_NAME ="appUserData.db";
     private static final int DATABASE_VERSION = 1;
 
     private static final String DATABASE_CREATE = "CREATE TABLE "+TABLE_NAME+"("

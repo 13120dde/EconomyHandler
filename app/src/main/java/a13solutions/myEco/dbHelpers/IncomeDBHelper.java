@@ -20,13 +20,14 @@ public class IncomeDBHelper extends SQLiteOpenHelper{
     public static final String COLUMN_MONTH="month";
     public static final String COLUMN_YEAR="year";
 
-    private static final String DATABASE_NAME="economyhandler.db";
+    private static final String DATABASE_NAME="appUserIncome.db";
     private static final int DATABASE_VERSION=1;
 
     private static final String DATABASE_CREATE=" CREATE TABLE "+TABLE_NAME+"("+COLUMN_ID
-            +" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "+COLUMN_USER_EMAIL+" TEXT NOT NULL FOREIGN KEY, "
+            +" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "+COLUMN_USER_EMAIL+" TEXT NOT NULL, "
             +COLUMN_TITLE+" TEXT NOT NULL, "+COLUMN_CATEGORY+" TEXT, "+COLUMN_AMOUNT+ " REAL NOT NULL, "
-            +COLUMN_DAY+" INTEGER, "+COLUMN_MONTH+" INTEGER, "+COLUMN_YEAR+" INTEGER );";
+            +COLUMN_DAY+" INTEGER, "+COLUMN_MONTH+" INTEGER, "+COLUMN_YEAR+" INTEGER, "
+            +" FOREIGN KEY ("+COLUMN_USER_EMAIL+") REFERENCES "+UserDBHelper.TABLE_NAME+"("+UserDBHelper.COLUMN_EMAIL+"));";
 
 
 

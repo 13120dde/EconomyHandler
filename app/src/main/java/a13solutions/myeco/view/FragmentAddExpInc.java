@@ -131,7 +131,7 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+/*
                 title = etTitle.getText().toString();
                 amount = etAmount.getText().toString();
                 date = tvDate.getText().toString();
@@ -140,7 +140,8 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
                     etAmount.setText("");
                     etTitle.setText("");
                     ((MainActivity) getActivity()).hideKeyboard();
-                };
+                };*/
+                logicAddExpInc.fillEmptyTable();
 
             }
         });
