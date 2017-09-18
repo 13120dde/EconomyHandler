@@ -32,33 +32,29 @@ public class UtlilityMethods {
         dialog.show();
     }
 
-    /**
-     *
-     * @param date : String
-     * @return int[3] : int[0] = day, int[1] = month, int[2]=year
-     */
-    public static int[] parseDateFromString(String date){
-        String[]dmy=date.split("-");
-        Log.d("IN_ParseDate", "before: "+date);
 
-        int[] dayMonthYear = new int[3];
-        dayMonthYear[0] = Integer.parseInt(dmy[0]);
-        dayMonthYear[1] = Integer.parseInt(dmy[1]);
-        dayMonthYear[2] = Integer.parseInt(dmy[2]);
 
-        Log.d("IN_ParseDateToString", "after: \n[0]:"+dayMonthYear[0]+" [1]:"+dayMonthYear[1]+" [2]:"+dayMonthYear[2]);
+    public static String formatDate(int year, int month, int day){
+        String d=Integer.toString(day), m=Integer.toString(month);
 
-        return dayMonthYear;
+        if(day<10){
+            d="0"+d;
+        }if(month<10){
+            m="0"+m;
+        }
+        return year+"-"+m+"-"+d;
     }
 
-    /**
-     *
-     * @param dayMonthYear int[3] : int[0] = day, int[1] = month, int[2]=year
-     * @return
-     */
-    public static String parseDateFromIntArray(int[] dayMonthYear){
-        String date="";
+    public static String addOneMonth(String date){
+        String[] vals = date.split("-");
 
-        return date;
+        int nextMonth = Integer.parseInt(vals[1])+1;
+        int nextYear = Integer.parseInt(vals[0]);
+        int day = Integer.parseInt(vals[2]);
+        if(nextMonth>12){
+            nextYear++;
+            nextMonth =1;
+        }
+        return formatDate(nextYear,nextMonth,day);
     }
 }

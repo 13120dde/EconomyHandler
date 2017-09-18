@@ -10,15 +10,15 @@ import java.util.HashMap;
 import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.model.ReturnPacket;
 
-import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_AMOUNT;
-import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_CATEGORY;
-import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_DAY;
-import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_MONTH;
-import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_TITLE;
-import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_USER_EMAIL;
-import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_YEAR;
+import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_AMOUNT;
+import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_CATEGORY;
+import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_DATE;
+import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_TITLE;
+import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_USER_EMAIL;
 import static a13solutions.myEco.dbHelpers.DBHelper.EXPENDITURE_TABLE_NAME;
 import static a13solutions.myEco.dbHelpers.DBHelper.INCOME_TABLE_NAME;
+import static a13solutions.myEco.dbHelpers.DBHelper.USER_COLUMN_EMAIL;
+import static a13solutions.myEco.dbHelpers.DBHelper.USER_TABLE_NAME;
 
 /**
  * Created by 13120dde on 2017-09-17.
@@ -36,22 +36,6 @@ public final class DBManager {
         this.actvity=activity;
     }
 
-    public ReturnPacket getUserEmail(String email) {
-        dbHelperUser = new DBHelper(actvity);
-        db = dbHelperUser.getReadableDatabase();
-        cursor = db.rawQuery("SELECT "+ DBHelper.USER_COLUMN_EMAIL +" FROM "+ DBHelper.USER_TABLE_NAME +" WHERE "+ DBHelper.USER_COLUMN_EMAIL +" = '"+email+"'",null);
-        cursor.moveToFirst();
-        ReturnPacket res;
-        if(cursor==null || cursor.getCount()<=0){
-            res= new ReturnPacket(false,"This email is not registered");
-        }else{
-            res = new ReturnPacket(true,cursor.getString(0));
-        }
-        if(cursor!=null)
-            cursor.close();
-        return res;
-    }
-
     public void registerUser(String email, String password, String firstName, String surname) {
         dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getWritableDatabase();
@@ -64,12 +48,60 @@ public final class DBManager {
         Log.d("IN_DB","registerUser(...): ");
     }
 
+    public void putIncome(String email, String title, String category, String date, double amountReal) {
+        dbHelperUser = new DBHelper(actvity);
+        db = dbHelperUser.getWritableDatabase();
+        values = new ContentValues();
+        values.put(EX_INC_COLUMN_USER_EMAIL, email);
+        values.put(EX_INC_COLUMN_TITLE, title);
+        values.put(EX_INC_COLUMN_CATEGORY, category);
+        values.put(EX_INC_COLUMN_AMOUNT, amountReal);
+        values.put(EX_INC_COLUMN_DATE, date);
+        db.insert(INCOME_TABLE_NAME,"",values);
+    }
+
+    public void putExpenditure(String email, String title, String category, String date, double amountReal) {
+        dbHelperUser = new DBHelper(actvity);
+        db = dbHelperUser.getWritableDatabase();
+        values = new ContentValues();
+        values.put(EX_INC_COLUMN_USER_EMAIL, email);
+        values.put(EX_INC_COLUMN_TITLE, title);
+        values.put(EX_INC_COLUMN_CATEGORY, category);
+        values.put(EX_INC_COLUMN_AMOUNT, amountReal);
+        values.put(EX_INC_COLUMN_DATE, date);
+        db.insert(EXPENDITURE_TABLE_NAME,"",values);
+
+    }
+
+    public ReturnPacket getUserEmail(String email) {
+        dbHelperUser = new DBHelper(actvity);
+        db = dbHelperUser.getReadableDatabase();
+        cursor = db.rawQuery("SELECT "+ DBHelper.USER_COLUMN_EMAIL
+                        +" FROM "+ DBHelper.USER_TABLE_NAME
+                        +" WHERE "+ DBHelper.USER_COLUMN_EMAIL +" = '"+email+"'"
+                ,null);
+
+        cursor.moveToFirst();
+        ReturnPacket res;
+        if(cursor==null || cursor.getCount()<=0){
+            res= new ReturnPacket(false,"This email is not registered");
+        }else{
+            res = new ReturnPacket(true,cursor.getString(0));
+        }
+        if(cursor!=null)
+            cursor.close();
+        return res;
+    }
 
     public ReturnPacket login(String email){
         dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getReadableDatabase();
-        cursor = db.rawQuery("SELECT "+ DBHelper.USER_COLUMN_PASSWORD +", "+ DBHelper.USER_COLUMN_FIRST_NAME
-                +", "+ DBHelper.USER_COLUMN_SURNAME +" FROM "+ DBHelper.USER_TABLE_NAME +" WHERE "+ DBHelper.USER_COLUMN_EMAIL +" = '"+email+"'",null);
+        cursor = db.rawQuery("SELECT "+ DBHelper.USER_COLUMN_PASSWORD +", "
+                + DBHelper.USER_COLUMN_FIRST_NAME +", "
+                + DBHelper.USER_COLUMN_SURNAME
+                +" FROM "+ DBHelper.USER_TABLE_NAME
+                +" WHERE "+ DBHelper.USER_COLUMN_EMAIL +" = '"+email+"'"
+                ,null);
 
         ReturnPacket res;
 
@@ -97,32 +129,28 @@ public final class DBManager {
         return res;
     }
 
-    public void putIncome(String email, String title, String category, int[] dayMonthYear, double amountReal) {
+
+
+    public void getExpenditures(String email, String dateFrom, String dateTo) {
         dbHelperUser = new DBHelper(actvity);
-        db = dbHelperUser.getWritableDatabase();
-        values = new ContentValues();
-        values.put(COLUMN_USER_EMAIL, email);
-        values.put(COLUMN_TITLE, title);
-        values.put(COLUMN_CATEGORY, category);
-        values.put(COLUMN_AMOUNT, amountReal);
-        values.put(COLUMN_DAY, dayMonthYear[0]);
-        values.put(COLUMN_MONTH, dayMonthYear[1]);
-        values.put(COLUMN_YEAR, dayMonthYear[2]);
-        db.insert(INCOME_TABLE_NAME,"",values);
+        db = dbHelperUser.getReadableDatabase();
+        cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
+                +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE
+                +"FROM "+EXPENDITURE_TABLE_NAME +" JOIN "+USER_TABLE_NAME
+                +" ON "+ EX_INC_COLUMN_USER_EMAIL +" = "+USER_COLUMN_EMAIL
+                +" WHERE "+ EX_INC_COLUMN_DATE +" BETWEEN '"+dateFrom+"' AND '"+dateTo+"'"
+                ,null);
     }
 
-    public void putExpenditure(String email, String title, String category, int[] dayMonthYear, double amountReal) {
+    public void getIncomes(String email, String dateFrom, String dateTo) {
         dbHelperUser = new DBHelper(actvity);
-        db = dbHelperUser.getWritableDatabase();
-        values = new ContentValues();
-        values.put(COLUMN_USER_EMAIL, email);
-        values.put(COLUMN_TITLE, title);
-        values.put(COLUMN_CATEGORY, category);
-        values.put(COLUMN_AMOUNT, amountReal);
-        values.put(COLUMN_DAY, dayMonthYear[0]);
-        values.put(COLUMN_MONTH, dayMonthYear[1]);
-        values.put(COLUMN_YEAR, dayMonthYear[2]);
-        db.insert(EXPENDITURE_TABLE_NAME,"",values);
-
+        db = dbHelperUser.getReadableDatabase();
+        cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
+                        +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE
+                        +"FROM "+INCOME_TABLE_NAME +" JOIN "+USER_TABLE_NAME
+                        +" ON "+ EX_INC_COLUMN_USER_EMAIL +" = "+USER_COLUMN_EMAIL
+                        +" WHERE "+ EX_INC_COLUMN_DATE +" BETWEEN '"+dateFrom+"' AND '"+dateTo+"'"
+                ,null);
     }
+
 }

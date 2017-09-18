@@ -21,6 +21,11 @@ public class LogicAddExpInc {
     private MainActivity activity;
     private String fragmentTitle;
 
+    /**
+     *
+     * @param activity
+     * @param fragmentTitle
+     */
     public LogicAddExpInc(MainActivity activity, String fragmentTitle) {
         this.activity=activity;
         this.fragmentTitle=fragmentTitle;
@@ -50,21 +55,23 @@ public class LogicAddExpInc {
 
     private void chooseTableAndSend(String title, String category, String date, String amount) {
 
-        int[] dayMonthYear = UtlilityMethods.parseDateFromString(date);
         Resources res = activity.getResources();
         SharedPreferences sp = activity.getSharedPreferences(res.getString(R.string.ECONOMYHANDLER_USER_DATA), Activity.MODE_PRIVATE);
         String email = sp.getString(res.getString(R.string.USER_EMAIL),null);
         double amountReal = Double.parseDouble(amount);
 
         if (fragmentTitle.equals(activity.getString(R.string.fragment_add_income))){
-            new DBManager(activity).putIncome(email,title,category,dayMonthYear,amountReal);
+            new DBManager(activity).putIncome(email,title,category,date,amountReal);
         }
         if(fragmentTitle.equals(activity.getString(R.string.fragment_add_expenditure))){
-            new DBManager(activity).putExpenditure(email,title,category,dayMonthYear,amountReal);
+            new DBManager(activity).putExpenditure(email,title,category,date,amountReal);
         }
     }
 
-    public void fillEmptyTable() {
+    /**
+     * Just to fill the db with some data
+     */
+    public void fillDbWithIncomesExpenditures() {
         Resources res = activity.getResources();
         SharedPreferences sp = activity.getSharedPreferences(res.getString(R.string.ECONOMYHANDLER_USER_DATA), Activity.MODE_PRIVATE);
         String email = sp.getString(res.getString(R.string.USER_EMAIL),null);
@@ -76,11 +83,13 @@ public class LogicAddExpInc {
         String[] expLeisureTitle={"Games","Cinema","Shopping","Toys","Soccer","Books"};
         String[] expAccomodationTitle={"Rent","Phone","Bills","Car maintenance"};
         String[] expTravelTitle ={"Gas","Buss ticket","Taxi","Uber"};
+        String date="";
 
         //DATE AND AMOUNT TOO
         for(int i = 0; i<1000; i++){
             String category="", title="";
             int[] dmy = getRandomDate();
+            date = UtlilityMethods.formatDate(dmy[0],dmy[1],dmy[2]);
             double amount =0;
 
             if(fragmentTitle.equals(res.getString(R.string.fragment_add_income))){
@@ -93,7 +102,7 @@ public class LogicAddExpInc {
                     amount = getRandomAmount(100);
                 }
 
-                new DBManager(activity).putIncome(email,title,category,dmy,amount);
+                new DBManager(activity).putIncome(email,title,category,date,amount);
                 Log.d("IN_GenInc", email+": "+title.toUpperCase()+" <"+category+"> date:"+dmy[0]+"-"+dmy[1]+"-"+dmy[2]+", amount:"+amount);
             }if(fragmentTitle.equals(res.getString(R.string.fragment_add_expenditure))){
 
@@ -115,7 +124,7 @@ public class LogicAddExpInc {
                     amount = getRandomAmount(100);
                 }
 
-                new DBManager(activity).putExpenditure(email,title,category,dmy,amount);
+                new DBManager(activity).putExpenditure(email,title,category,date,amount);
                 Log.d("IN_GenExp", email+": "+title.toUpperCase()+" <"+category+"> date:"+dmy[0]+"-"+dmy[1]+"-"+dmy[2]+", amount:"+amount);
             }
         }
@@ -132,9 +141,9 @@ public class LogicAddExpInc {
 
     private int[] getRandomDate() {
         int dmy[] = new int[3];
-        dmy[0] = new Random().nextInt(31)+1;
+        dmy[2] = new Random().nextInt(31)+1;
         dmy[1] = new Random().nextInt(12)+1;
-        dmy[2] = new Random().nextInt(18)+2000;
+        dmy[0] = new Random().nextInt(18)+2000;
         return dmy;
     }
 

@@ -8,6 +8,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
 /**
  * Created by 13120dde on 2017-09-15.
  */
@@ -32,55 +33,23 @@ public class DataFragment extends Fragment{
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         Log.d(LOG_TAG,"datafragment created");
-        date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         dateFrom = date;
-        dateTo = addOneMonth(date);
+        dateTo = UtlilityMethods.addOneMonth(date);
 
 
-    }
-
-    private String addOneMonth(String date) {
-        String[] vals = date.split("-");
-        int nextMonth = Integer.parseInt(vals[1])+1;
-        if(nextMonth>12){
-            int nextYear = Integer.parseInt(vals[2]);
-            vals[2] = Integer.toString(++nextYear);
-        }
-        if(nextMonth<10){
-            vals[1]="0"+nextMonth;
-        }else{
-            vals[1]= String.valueOf(nextMonth);
-        }
-
-        return vals[0]+"-"+vals[1]+"-"+vals[2];
     }
 
     public void setChosenDate(int year, int month, int day) {
-        chosenDate=formatDate(year,month,day);
-    }
-
-
-    public String getDate(int dayOfWeek, int month, int year) {
-        return formatDate(year,month,dayOfWeek);
+        chosenDate= UtlilityMethods.formatDate(year,month,day);
     }
 
     public void setDateFrom(int year, int month, int day) {
-        dateFrom = formatDate(year,month,day);
+        dateFrom = UtlilityMethods.formatDate(year,month,day);
     }
 
     public void setDateTo(int year, int month, int day) {
-        dateTo = formatDate(year, month, day);
-    }
-
-    private String formatDate(int year, int month, int day){
-        String d=Integer.toString(day), m=Integer.toString(month);
-
-        if(day<10){
-            d="0"+d;
-        }if(month<10){
-            m="0"+m;
-        }
-        return d+"-"+m+"-"+year;
+        dateTo = UtlilityMethods.formatDate(year, month, day);
     }
 
     public String getDateTo() {

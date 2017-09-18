@@ -20,36 +20,46 @@ public class DBHelper extends SQLiteOpenHelper {
     //table expenditure/income
     public static final String EXPENDITURE_TABLE_NAME="expenditures";
     public static final String INCOME_TABLE_NAME="incomes";
-    public static final String COLUMN_ID="id";
-    public static final String COLUMN_USER_EMAIL="user_email";
-    public static final String COLUMN_TITLE="title";
-    public static final String COLUMN_CATEGORY="category";
-    public static final String COLUMN_AMOUNT="amount";
-    public static final String COLUMN_DAY="day";
-    public static final String COLUMN_MONTH="month";
-    public static final String COLUMN_YEAR="year";
+    public static final String EX_INC_COLUMN_ID ="id";
+    public static final String EX_INC_COLUMN_USER_EMAIL ="user_email";
+    public static final String EX_INC_COLUMN_TITLE ="title";
+    public static final String EX_INC_COLUMN_CATEGORY ="category";
+    public static final String EX_INC_COLUMN_AMOUNT ="amount";
+    public static final String EX_INC_COLUMN_DATE ="date";
+
 
     private static final String DATABASE_NAME ="economyHandlerUserData.db";
     private static final int DATABASE_VERSION = 1;
 
     //query create table user
-    private static final String DATABASE_CREATE_TABLE_USER = "CREATE TABLE "+ USER_TABLE_NAME +"("
-            + USER_COLUMN_EMAIL +" TEXT NOT NULL PRIMARY KEY, "+ USER_COLUMN_PASSWORD +" TEXT NOT NULL, "
-            + USER_COLUMN_FIRST_NAME +" TEXT NOT NULL, "+ USER_COLUMN_SURNAME +" TEXT NOT NULL );";
+    private static final String DATABASE_CREATE_TABLE_USER = "CREATE TABLE "
+            + USER_TABLE_NAME +"("
+            + USER_COLUMN_EMAIL +" TEXT NOT NULL PRIMARY KEY, "
+            + USER_COLUMN_PASSWORD +" TEXT NOT NULL, "
+            + USER_COLUMN_FIRST_NAME +" TEXT NOT NULL, "
+            + USER_COLUMN_SURNAME +" TEXT NOT NULL "
+            +");";
 
     //query create table expenditure
-    private static final String DATABASE_CREATE_TABLE_EXPENDITURE=" CREATE TABLE "+EXPENDITURE_TABLE_NAME+"("+COLUMN_ID
-            +" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "+COLUMN_USER_EMAIL+" TEXT NOT NULL, "
-            +COLUMN_TITLE+" TEXT NOT NULL, "+COLUMN_CATEGORY+" TEXT, "+COLUMN_AMOUNT+ " REAL NOT NULL, "
-            +COLUMN_DAY+" INTEGER, "+COLUMN_MONTH+" INTEGER, "+COLUMN_YEAR+" INTEGER, "
-            +" FOREIGN KEY ("+COLUMN_USER_EMAIL+") REFERENCES "+USER_TABLE_NAME +"("+USER_COLUMN_EMAIL+"));";
+    private static final String DATABASE_CREATE_TABLE_EXPENDITURE=" CREATE TABLE "+EXPENDITURE_TABLE_NAME+"("
+            + EX_INC_COLUMN_ID +" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+            + EX_INC_COLUMN_USER_EMAIL +" TEXT NOT NULL, "
+            + EX_INC_COLUMN_TITLE +" TEXT NOT NULL, "
+            + EX_INC_COLUMN_CATEGORY +" TEXT, "
+            + EX_INC_COLUMN_AMOUNT + " REAL NOT NULL, "
+            + EX_INC_COLUMN_DATE +" TEXT, "
+            +" FOREIGN KEY ("+ EX_INC_COLUMN_USER_EMAIL +") REFERENCES " +USER_TABLE_NAME +"("+USER_COLUMN_EMAIL+")"
+            +");";
 
     //query create table income
-    private static final String DATABASE_CREATE_TABLE_INCOME=" CREATE TABLE "+INCOME_TABLE_NAME+"("+COLUMN_ID
-            +" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "+COLUMN_USER_EMAIL+" TEXT NOT NULL, "
-            +COLUMN_TITLE+" TEXT NOT NULL, "+COLUMN_CATEGORY+" TEXT, "+COLUMN_AMOUNT+ " REAL NOT NULL, "
-            +COLUMN_DAY+" INTEGER, "+COLUMN_MONTH+" INTEGER, "+COLUMN_YEAR+" INTEGER, "
-            +" FOREIGN KEY ("+COLUMN_USER_EMAIL+") REFERENCES "+USER_TABLE_NAME +"("+USER_COLUMN_EMAIL+"));";
+    private static final String DATABASE_CREATE_TABLE_INCOME=" CREATE TABLE "+INCOME_TABLE_NAME+"("
+            + EX_INC_COLUMN_ID +" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+            + EX_INC_COLUMN_USER_EMAIL +" TEXT NOT NULL, "
+            + EX_INC_COLUMN_TITLE +" TEXT NOT NULL, "
+            + EX_INC_COLUMN_CATEGORY +" TEXT, "+ EX_INC_COLUMN_AMOUNT + " REAL NOT NULL, "
+            + EX_INC_COLUMN_DATE +" TEXT, "
+            +" FOREIGN KEY ("+ EX_INC_COLUMN_USER_EMAIL +") REFERENCES " +USER_TABLE_NAME +"("+USER_COLUMN_EMAIL+")"
+            + ");";
 
 
 
@@ -72,7 +82,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+ EXPENDITURE_TABLE_NAME);
 
 
-        //TODO handle migration of data
+        //TODO handle backup of data before upgrading
         onCreate(sqLiteDatabase);
     }
 }

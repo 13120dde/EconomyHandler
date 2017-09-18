@@ -20,7 +20,6 @@ import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.R;
 import a13solutions.myEco.model.DataFragment;
 import a13solutions.myEco.model.LogicAddExpInc;
-import a13solutions.myEco.model.ReturnPacket;
 
 
 /**
@@ -141,7 +140,9 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
                     etTitle.setText("");
                     ((MainActivity) getActivity()).hideKeyboard();
                 };*/
-                logicAddExpInc.fillEmptyTable();
+
+                //Just to fill db with some data
+                logicAddExpInc.fillDbWithIncomesExpenditures();
 
             }
         });
