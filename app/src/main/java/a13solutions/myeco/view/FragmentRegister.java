@@ -26,7 +26,7 @@ public class FragmentRegister extends Fragment implements FragmentMethods{
     }
 
     @Override
-    public void setDate() {
+    public void updateData() {
 
     }
 

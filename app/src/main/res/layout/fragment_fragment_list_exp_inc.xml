@@ -17,7 +17,9 @@
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/containerForDates"
         android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp">
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <TextView
             android:id="@+id/tvDateFrom"
@@ -47,36 +49,30 @@
         style="@android:style/Widget.DeviceDefault.Light.ImageButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="false"
         android:background="@color/colorPurple"
         android:elevation="4dp"
+        android:paddingRight="10dp"
         android:scaleType="fitEnd"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/containerForDates"
-        app:srcCompat="@drawable/ic_expand_white"
-        android:paddingRight="10dp"/>
+        app:srcCompat="@drawable/ic_expand_white" />
 
     <LinearLayout
         android:id="@+id/bottomFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:background="@color/colorPurple"
         android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@color/colorPurple"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp">
+        app:layout_constraintRight_toRightOf="parent">
 
         <TextView
             android:id="@+id/tvBottom"
@@ -85,8 +81,7 @@
             android:layout_weight="1"
             android:textAlignment="viewStart"
             android:textColor="@android:color/background_light"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvSummary"
@@ -103,10 +98,8 @@
         android:id="@+id/lvEpandableList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomFragment"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -114,5 +107,6 @@
         app:layout_constraintTop_toBottomOf="@+id/btnExpandCollapseAll"
         app:layout_constraintVertical_bias="0.0"
         android:paddingRight="10dp"
-        />
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
 </android.support.constraint.ConstraintLayout>

@@ -5,5 +5,5 @@ package a13solutions.myEco.view;
  */
 
 public interface FragmentMethods {
-    public void setDate();
+    public void updateData();
 }

@@ -50,7 +50,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
                 data.setDateTo(year,++month,day);
             }
         }
-
-        ((FragmentMethods)targetFragment).setDate();
+        ((FragmentMethods)targetFragment).updateData();
     }
 }

@@ -60,9 +60,16 @@ public class UtlilityMethods {
         return formatDate(nextYear,nextMonth,day);
     }
 
-    public static String round(double amount) {
+    public static String roundTwoDecimals(double amount) {
         DecimalFormat df = new DecimalFormat("#.##");
         String s = df.format(amount);
         return s;
     }
+
+    public static int[] parseDateFromString(String date) {
+        String[] s = date.split("-");
+        int[] yyyymmdd = {Integer.parseInt(s[0]), Integer.parseInt(s[1]),Integer.parseInt(s[2])};
+        return yyyymmdd;
+    }
+
 }

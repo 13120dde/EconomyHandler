@@ -1,17 +1,21 @@
 package a13solutions.myEco.model;
 
+import android.support.annotation.NonNull;
+
+import java.util.Comparator;
+
 /**
  * Created by 13120dde on 2017-09-18.
  */
 
-public class ExpIncItem{
+public class ExpIncItem {
 
     private final int keyInDb;
     private String title, category, date;
     private double amount;
     private int index;
 
-    public ExpIncItem(String title, String category, String date, double amount, int key, int index) {
+    public ExpIncItem(String title, String category, String date, double amount, int key, int index){
         this.title=title;
         this.category=category;
         this.date=date;
@@ -54,5 +58,6 @@ public class ExpIncItem{
     public void setIndex(int index) {
         this.index = index;
     }
+
 
 }

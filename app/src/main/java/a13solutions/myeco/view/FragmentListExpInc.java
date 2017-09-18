@@ -8,20 +8,19 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 import a13solutions.myEco.R;
 import a13solutions.myEco.adapter.ExpandableListViewAdapter;
 import a13solutions.myEco.model.ChildInfo;
 import a13solutions.myEco.model.DataFragment;
 import a13solutions.myEco.model.ListItemInfo;
+import a13solutions.myEco.model.UtlilityMethods;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,6 +71,13 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadData();
+
+    }
+
     //method to expand all groups
     private void expandAll() {
         int count = listAdapter.getGroupCount();
@@ -79,6 +85,8 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
             listView.expandGroup(i);
             listAdapter.changeIcon(i);
         }
+        isExpanded = true;
+        btnExpandCollapse.setImageResource(R.drawable.ic_collapse_white);
 
     }
 
@@ -88,27 +96,35 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
         for (int i = 0; i < count; i++){
             listView.collapseGroup(i);
         }
+        isExpanded = false;
+        btnExpandCollapse.setImageResource(R.drawable.ic_expand_white);
     }
 
     //load some initial data into out list
     private void loadData(){
 
+        listItems.clear();
+        listAdapter.notifyDataSetChanged();
+        collapseAll();
+        DataFragment data = (DataFragment) getFragmentManager().findFragmentByTag(DataFragment.DATA_TAG);
 
         if(fragmentTitle.equals(getString(R.string.fragment_incomes))){
+            data.getIncomesFromDb();
             for(int i=0; i<dataFragment.getIncomesSize();i++){
                 addProduct(dataFragment.getIncomeTitle(i), dataFragment.getIncomeCategory(i),
                 dataFragment.getIncomeDate(i), dataFragment.getIncomeAmount(i),
                 0);
             }
-//            tvSummary.setText(Double.toString(dataFragment.getTotalIncomeAmount()));
+            tvSummary.setText(UtlilityMethods.roundTwoDecimals(dataFragment.getTotalIncomeAmount())+getString(R.string.tv_currency));
         }
         if(fragmentTitle.equals(getString(R.string.fragment_expenditures))){
+            data.getExpendituresFromDb();
             for(int i =0; i<dataFragment.getExpendituresSize();i++){
                 addProduct(dataFragment.getExpenditureTitle(i),dataFragment.getExpenditureCategory(i),
-                        dataFragment.getExpenditureDate(i), dataFragment.getExpenditureAmount(i),
-                        0);
+                dataFragment.getExpenditureDate(i), dataFragment.getExpenditureAmount(i),
+                0);
             }
-  //          tvSummary.setText(Double.toString(dataFragment.getTotalExpenditureAmount()));
+            tvSummary.setText(UtlilityMethods.roundTwoDecimals(dataFragment.getTotalExpenditureAmount())+getString(R.string.tv_currency));
         }
     }
 
@@ -162,11 +178,16 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
 
     }
 
+    public String getFragmentTitle() {
+        return fragmentTitle;
+    }
+
     @Override
-    public void setDate() {
+    public void updateData() {
 
         tvDateFrom.setText(dataFragment.getDateFrom());
         tvDateTo.setText(dataFragment.getDateTo());
+        loadData();
 
     }
 
@@ -178,12 +199,8 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
                 case R.id.btnExpandCollapseAll:
                     if(!isExpanded){
                         expandAll();
-                        isExpanded=true;
-                        btnExpandCollapse.setImageResource(R.drawable.ic_collapse_white);
                     }else{
                         collapseAll();
-                        isExpanded=false;
-                        btnExpandCollapse.setImageResource(R.drawable.ic_expand_white);
                     }
                     break;
                 case R.id.tvDateFrom:

@@ -27,7 +27,7 @@ public class FragmentHome extends Fragment implements FragmentMethods {
     }
 
     @Override
-    public void setDate() {
+    public void updateData() {
 
     }
 }

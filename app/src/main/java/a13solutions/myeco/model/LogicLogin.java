@@ -6,8 +6,8 @@ import java.util.HashMap;
 
 import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.R;
-import a13solutions.myEco.dbHelpers.DBManager;
-import a13solutions.myEco.dbHelpers.DBHelper;
+import a13solutions.myEco.dbHelper.DBManager;
+import a13solutions.myEco.dbHelper.DBHelper;
 
 /**
  * Created by 13120dde on 2017-09-14.

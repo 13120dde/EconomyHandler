@@ -1,7 +1,7 @@
 package a13solutions.myEco.model;
 
 import a13solutions.myEco.MainActivity;
-import a13solutions.myEco.dbHelpers.DBManager;
+import a13solutions.myEco.dbHelper.DBManager;
 
 /**
  * Created by 13120dde on 2017-09-13.

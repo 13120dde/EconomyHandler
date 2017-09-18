@@ -93,7 +93,7 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
         spinCategory.setAdapter(adapter);
     }
 
-    public void setDate() {
+    public void updateData() {
 
         DataFragment dataFragment = (DataFragment) getActivity().getFragmentManager().findFragmentByTag(DataFragment.DATA_TAG);
         tvDate.setText(dataFragment.getChosenDate());
@@ -130,7 +130,7 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-/*
+
                 title = etTitle.getText().toString();
                 amount = etAmount.getText().toString();
                 date = tvDate.getText().toString();
@@ -139,10 +139,10 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
                     etAmount.setText("");
                     etTitle.setText("");
                     ((MainActivity) getActivity()).hideKeyboard();
-                };*/
+                };
 
                 //Just to fill db with some data
-                logicAddExpInc.fillDbWithIncomesExpenditures();
+                //logicAddExpInc.fillDbWithIncomesExpenditures();
 
             }
         });

@@ -1,4 +1,4 @@
-package a13solutions.myEco.dbHelpers;
+package a13solutions.myEco.dbHelper;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

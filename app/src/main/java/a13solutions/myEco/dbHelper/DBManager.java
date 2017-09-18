@@ -1,4 +1,4 @@
-package a13solutions.myEco.dbHelpers;
+package a13solutions.myEco.dbHelper;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -9,20 +9,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import a13solutions.myEco.MainActivity;
-import a13solutions.myEco.model.DataFragment;
 import a13solutions.myEco.model.ExpIncItem;
 import a13solutions.myEco.model.ReturnPacket;
 
-import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_AMOUNT;
-import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_CATEGORY;
-import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_DATE;
-import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_ID;
-import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_TITLE;
-import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_USER_EMAIL;
-import static a13solutions.myEco.dbHelpers.DBHelper.EXPENDITURE_TABLE_NAME;
-import static a13solutions.myEco.dbHelpers.DBHelper.INCOME_TABLE_NAME;
-import static a13solutions.myEco.dbHelpers.DBHelper.USER_COLUMN_EMAIL;
-import static a13solutions.myEco.dbHelpers.DBHelper.USER_TABLE_NAME;
+import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_AMOUNT;
+import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_CATEGORY;
+import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_DATE;
+import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_ID;
+import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_TITLE;
+import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_USER_EMAIL;
+import static a13solutions.myEco.dbHelper.DBHelper.EXPENDITURE_TABLE_NAME;
+import static a13solutions.myEco.dbHelper.DBHelper.INCOME_TABLE_NAME;
 
 /**
  * Created by 13120dde on 2017-09-17.
@@ -135,9 +132,10 @@ public final class DBManager {
 
 
 
-    public ArrayList<ExpIncItem> getExpenditures(String email, String dateFrom, String dateTo, ArrayList<ExpIncItem> expenditureArray) {
+    public ArrayList<ExpIncItem> getExpenditures(String email, String dateFrom, String dateTo) {
         dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getReadableDatabase();
+        ArrayList<ExpIncItem> expenditureArray = new ArrayList<>();
         int index = 0;
         double totalAmount=0;
 
@@ -165,9 +163,10 @@ public final class DBManager {
         return expenditureArray;
     }
 
-    public ArrayList<ExpIncItem> getIncomes(String email, String dateFrom, String dateTo, ArrayList<ExpIncItem> incomeArray) {
+    public ArrayList<ExpIncItem> getIncomes(String email, String dateFrom, String dateTo) {
         dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getReadableDatabase();
+        ArrayList<ExpIncItem> incomeArray = new ArrayList<>();
         int index = 0;
         double totalAmount=0;
 
@@ -184,9 +183,10 @@ public final class DBManager {
             String date = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_DATE));
             double amount = cursor.getDouble(cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT));
             int key = cursor.getInt(cursor.getColumnIndex(EX_INC_COLUMN_ID));
+
             incomeArray.add(new ExpIncItem(title,category,date,amount,key,index));
-            index++;
             totalAmount+=amount;
+            index++;
         }
 
         //just to skip iterating trough array later to calculate total amount

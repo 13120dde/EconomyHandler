@@ -1,6 +1,5 @@
 package a13solutions.myEco.model;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -44,7 +43,7 @@ public class ListItemInfo {
     }
 
     public String getAmount() {
-        return UtlilityMethods.round(amount);
+        return UtlilityMethods.roundTwoDecimals(amount);
     }
 
     public void setAmount(double amount) {

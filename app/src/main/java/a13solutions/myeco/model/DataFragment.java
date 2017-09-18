@@ -1,6 +1,5 @@
 package a13solutions.myEco.model;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -10,11 +9,14 @@ import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.R;
-import a13solutions.myEco.dbHelpers.DBManager;
+import a13solutions.myEco.comparator.ComparatorAmount;
+import a13solutions.myEco.comparator.ComparatorDateAscending;
+import a13solutions.myEco.dbHelper.DBManager;
 
 
 /**
@@ -27,7 +29,7 @@ public class DataFragment extends Fragment{
     public static final String DATA_TAG="data";
     MainActivity activity;
 
-    private String date, chosenDate, dateFrom, dateTo;
+    private String date, chosenDate, dateFrom, dateTo, email;
     private double totalExpenditureAmount, totalIncomeAmount;
     private ArrayList<ExpIncItem> listIncome, listExpenditure;
 
@@ -86,31 +88,31 @@ public class DataFragment extends Fragment{
         Resources res = activity.getResources();
         SharedPreferences sp = activity.getSharedPreferences(activity.getString(R.string.ECONOMYHANDLER_USER_DATA),
                 activity.MODE_PRIVATE);
-        String email = sp.getString(res.getString(R.string.USER_EMAIL), "");
-        getExpendituresFromDb(email,dateFrom,dateTo);
-        getIncomesFromDb(email,dateFrom,dateTo);
+        email = sp.getString(res.getString(R.string.USER_EMAIL), "");
+        getExpendituresFromDb( );
+        getIncomesFromDb();
+    }
 
-        //printArray(listIncome);
+    public void getIncomesFromDb(){
+        listIncome= new DBManager(activity).getIncomes(email,dateFrom,dateTo);
+
+        ExpIncItem totalAmount = listIncome.remove(listIncome.size()-1);
+        if(totalAmount!=null){
+            totalIncomeAmount = totalAmount.getAmount();
+        }
+        sortIncomesByDatesDescending();
+        printArray(listIncome);
+
+    }
+
+    public void getExpendituresFromDb(){
+        listExpenditure = new DBManager(activity).getExpenditures(email,dateFrom,dateTo);
+        ExpIncItem totalAmount = listExpenditure.remove(listExpenditure.size()-1);
+        if(totalAmount!=null){
+            totalExpenditureAmount = totalAmount.getAmount();
+        }
+        sortExpendituresByDateAscending();
         printArray(listExpenditure);
-    }
-
-    public void getIncomesFromDb(String email, String dateFrom, String dateTo){
-        listIncome = new ArrayList<>();
-        listIncome= new DBManager(activity).getIncomes(email,dateFrom,dateTo,listIncome);
-        ExpIncItem totalAmount = listIncome.remove(listIncome.size()-1);
-        if(totalAmount!=null){
-            totalIncomeAmount = totalAmount.getAmount();
-        }
-
-    }
-
-    public void getExpendituresFromDb(String email, String dateFrom, String dateTo){
-        listIncome = new ArrayList<ExpIncItem>();
-        listExpenditure = new DBManager(activity).getExpenditures(email,dateFrom,dateTo,listExpenditure);
-        ExpIncItem totalAmount = listIncome.remove(listIncome.size()-1);
-        if(totalAmount!=null){
-            totalIncomeAmount = totalAmount.getAmount();
-        }
     }
 
     private void printArray(ArrayList<ExpIncItem> listExpenditure) {
@@ -189,6 +191,22 @@ public class DataFragment extends Fragment{
 
     public int getExpenditureIndex(int i) {
         return listExpenditure.get(i).getIndex();
+    }
+
+    public  void sortExpendituresByDateAscending(){
+        Collections.sort(listExpenditure, new ComparatorDateAscending());
+    }
+
+    public void sortIncomesByDatesAscending(){
+        Collections.sort(listIncome, new ComparatorDateAscending());
+    }
+
+    public void sortIncomesByAmount(){
+        Collections.sort(listIncome, new ComparatorAmount());
+    }
+
+    public void sortExpendituresByAmount(){
+        Collections.sort(listExpenditure, new ComparatorAmount());
     }
 
 }

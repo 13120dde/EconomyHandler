@@ -1,6 +1,7 @@
 package a13solutions.myEco.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,8 +90,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
         TextView amount = (TextView) view.findViewById(R.id.tvItemAmount);
         heading.setText(headerInfo.getTitle().trim());
 
-
-        amount.setText(headerInfo.getAmount());
+        Resources r = context.getResources();
+        amount.setText(headerInfo.getAmount()+r.getString(R.string.tv_currency));
 
         return view;
     }
