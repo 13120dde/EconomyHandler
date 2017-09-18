@@ -151,6 +151,16 @@ public final class DBManager {
                         +" ON "+ EX_INC_COLUMN_USER_EMAIL +" = "+USER_COLUMN_EMAIL
                         +" WHERE "+ EX_INC_COLUMN_DATE +" BETWEEN '"+dateFrom+"' AND '"+dateTo+"'"
                 ,null);
+
+        int titleIndex = cursor.getColumnIndex(EX_INC_COLUMN_TITLE);
+        int categoryIndex = cursor.getColumnIndex(EX_INC_COLUMN_CATEGORY);
+        int dateIndex = cursor.getColumnIndex(EX_INC_COLUMN_DATE);
+        int amountIndex = cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT);
+
+
+        while (cursor.moveToNext()){
+
+        }
     }
 
 }
