@@ -10,15 +10,23 @@ import java.util.HashMap;
 import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.model.ReturnPacket;
 
+import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_AMOUNT;
+import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_CATEGORY;
+import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_DAY;
+import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_MONTH;
+import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_TITLE;
+import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_USER_EMAIL;
+import static a13solutions.myEco.dbHelpers.DBHelper.COLUMN_YEAR;
+import static a13solutions.myEco.dbHelpers.DBHelper.EXPENDITURE_TABLE_NAME;
+import static a13solutions.myEco.dbHelpers.DBHelper.INCOME_TABLE_NAME;
+
 /**
  * Created by 13120dde on 2017-09-17.
  */
 
 public final class DBManager {
 
-    private UserDBHelper dbHelperUser;
-    private IncomeDBHelper dbHelperIncome;
-    private ExpenditureDBHelper dbHelperExpenditure;
+    private DBHelper dbHelperUser;
     private SQLiteDatabase db;
     private Cursor cursor;
     private ContentValues values;
@@ -29,9 +37,9 @@ public final class DBManager {
     }
 
     public ReturnPacket getUserEmail(String email) {
-        dbHelperUser = new UserDBHelper(actvity);
+        dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getReadableDatabase();
-        cursor = db.rawQuery("SELECT "+UserDBHelper.COLUMN_EMAIL+" FROM "+UserDBHelper.TABLE_NAME+" WHERE "+UserDBHelper.COLUMN_EMAIL+" = '"+email+"'",null);
+        cursor = db.rawQuery("SELECT "+ DBHelper.USER_COLUMN_EMAIL +" FROM "+ DBHelper.USER_TABLE_NAME +" WHERE "+ DBHelper.USER_COLUMN_EMAIL +" = '"+email+"'",null);
         cursor.moveToFirst();
         ReturnPacket res;
         if(cursor==null || cursor.getCount()<=0){
@@ -45,23 +53,23 @@ public final class DBManager {
     }
 
     public void registerUser(String email, String password, String firstName, String surname) {
-        dbHelperUser = new UserDBHelper(actvity);
+        dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getWritableDatabase();
         values = new ContentValues();
-        values.put(UserDBHelper.COLUMN_EMAIL, email);
-        values.put(UserDBHelper.COLUMN_PASSWORD, password);
-        values.put(UserDBHelper.COLUMN_FIRST_NAME, firstName);
-        values.put(UserDBHelper.COLUMN_SURNAME, surname);
-        db.insert(UserDBHelper.TABLE_NAME,"",values);
+        values.put(DBHelper.USER_COLUMN_EMAIL, email);
+        values.put(DBHelper.USER_COLUMN_PASSWORD, password);
+        values.put(DBHelper.USER_COLUMN_FIRST_NAME, firstName);
+        values.put(DBHelper.USER_COLUMN_SURNAME, surname);
+        db.insert(DBHelper.USER_TABLE_NAME,"",values);
         Log.d("IN_DB","registerUser(...): ");
     }
 
 
     public ReturnPacket login(String email){
-        dbHelperUser = new UserDBHelper(actvity);
+        dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getReadableDatabase();
-        cursor = db.rawQuery("SELECT "+UserDBHelper.COLUMN_PASSWORD+", "+UserDBHelper.COLUMN_FIRST_NAME
-                +", "+UserDBHelper.COLUMN_SURNAME+" FROM "+UserDBHelper.TABLE_NAME+" WHERE "+UserDBHelper.COLUMN_EMAIL+" = '"+email+"'",null);
+        cursor = db.rawQuery("SELECT "+ DBHelper.USER_COLUMN_PASSWORD +", "+ DBHelper.USER_COLUMN_FIRST_NAME
+                +", "+ DBHelper.USER_COLUMN_SURNAME +" FROM "+ DBHelper.USER_TABLE_NAME +" WHERE "+ DBHelper.USER_COLUMN_EMAIL +" = '"+email+"'",null);
 
         ReturnPacket res;
 
@@ -70,16 +78,16 @@ public final class DBManager {
         if(cursor==null || cursor.getCount()<=0){
             res= new ReturnPacket(false,"This email is not registered");
         }else{
-            int firstNameIndex = cursor.getColumnIndex(UserDBHelper.COLUMN_FIRST_NAME);
-            int surNameIndex = cursor.getColumnIndex(UserDBHelper.COLUMN_SURNAME);
-            int passwordIndex = cursor.getColumnIndex(UserDBHelper.COLUMN_PASSWORD);
+            int firstNameIndex = cursor.getColumnIndex(DBHelper.USER_COLUMN_FIRST_NAME);
+            int surNameIndex = cursor.getColumnIndex(DBHelper.USER_COLUMN_SURNAME);
+            int passwordIndex = cursor.getColumnIndex(DBHelper.USER_COLUMN_PASSWORD);
 
 
             cursor.moveToFirst();
             HashMap<String, String> vals = new HashMap<>();
-            vals.put(UserDBHelper.COLUMN_FIRST_NAME,cursor.getString(firstNameIndex));
-            vals.put(UserDBHelper.COLUMN_SURNAME,cursor.getString(surNameIndex));
-            vals.put(UserDBHelper.COLUMN_PASSWORD, cursor.getString(passwordIndex));
+            vals.put(DBHelper.USER_COLUMN_FIRST_NAME,cursor.getString(firstNameIndex));
+            vals.put(DBHelper.USER_COLUMN_SURNAME,cursor.getString(surNameIndex));
+            vals.put(DBHelper.USER_COLUMN_PASSWORD, cursor.getString(passwordIndex));
 
             res = new ReturnPacket(true, vals);
 
@@ -90,31 +98,31 @@ public final class DBManager {
     }
 
     public void putIncome(String email, String title, String category, int[] dayMonthYear, double amountReal) {
-        dbHelperIncome = new IncomeDBHelper(actvity);
-        db = dbHelperIncome.getWritableDatabase();
+        dbHelperUser = new DBHelper(actvity);
+        db = dbHelperUser.getWritableDatabase();
         values = new ContentValues();
-        values.put(IncomeDBHelper.COLUMN_USER_EMAIL, email);
-        values.put(IncomeDBHelper.COLUMN_TITLE, title);
-        values.put(IncomeDBHelper.COLUMN_CATEGORY, category);
-        values.put(IncomeDBHelper.COLUMN_AMOUNT, amountReal);
-        values.put(IncomeDBHelper.COLUMN_DAY, dayMonthYear[0]);
-        values.put(IncomeDBHelper.COLUMN_MONTH, dayMonthYear[1]);
-        values.put(IncomeDBHelper.COLUMN_YEAR, dayMonthYear[2]);
-        db.insert(IncomeDBHelper.TABLE_NAME,"",values);
+        values.put(COLUMN_USER_EMAIL, email);
+        values.put(COLUMN_TITLE, title);
+        values.put(COLUMN_CATEGORY, category);
+        values.put(COLUMN_AMOUNT, amountReal);
+        values.put(COLUMN_DAY, dayMonthYear[0]);
+        values.put(COLUMN_MONTH, dayMonthYear[1]);
+        values.put(COLUMN_YEAR, dayMonthYear[2]);
+        db.insert(INCOME_TABLE_NAME,"",values);
     }
 
     public void putExpenditure(String email, String title, String category, int[] dayMonthYear, double amountReal) {
-        dbHelperExpenditure = new ExpenditureDBHelper(actvity);
-        db = dbHelperExpenditure.getWritableDatabase();
+        dbHelperUser = new DBHelper(actvity);
+        db = dbHelperUser.getWritableDatabase();
         values = new ContentValues();
-        values.put(ExpenditureDBHelper.COLUMN_USER_EMAIL, email);
-        values.put(ExpenditureDBHelper.COLUMN_TITLE, title);
-        values.put(ExpenditureDBHelper.COLUMN_CATEGORY, category);
-        values.put(ExpenditureDBHelper.COLUMN_AMOUNT, amountReal);
-        values.put(ExpenditureDBHelper.COLUMN_DAY, dayMonthYear[0]);
-        values.put(ExpenditureDBHelper.COLUMN_MONTH, dayMonthYear[1]);
-        values.put(ExpenditureDBHelper.COLUMN_YEAR, dayMonthYear[2]);
-        db.insert(ExpenditureDBHelper.TABLE_NAME,"",values);
+        values.put(COLUMN_USER_EMAIL, email);
+        values.put(COLUMN_TITLE, title);
+        values.put(COLUMN_CATEGORY, category);
+        values.put(COLUMN_AMOUNT, amountReal);
+        values.put(COLUMN_DAY, dayMonthYear[0]);
+        values.put(COLUMN_MONTH, dayMonthYear[1]);
+        values.put(COLUMN_YEAR, dayMonthYear[2]);
+        db.insert(EXPENDITURE_TABLE_NAME,"",values);
 
     }
 }

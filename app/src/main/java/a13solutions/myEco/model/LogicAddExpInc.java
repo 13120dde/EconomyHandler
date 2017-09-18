@@ -78,7 +78,7 @@ public class LogicAddExpInc {
         String[] expTravelTitle ={"Gas","Buss ticket","Taxi","Uber"};
 
         //DATE AND AMOUNT TOO
-        for(int i = 0; i<2; i++){
+        for(int i = 0; i<1000; i++){
             String category="", title="";
             int[] dmy = getRandomDate();
             double amount =0;
@@ -106,7 +106,7 @@ public class LogicAddExpInc {
                     amount = getRandomAmount(100);
                 }if(category.equals(categoryExp[2])){
                     title=getRandomElement(expLeisureTitle);
-                    amount = getRandomAmount(2000);
+                    amount = getRandomAmount(200);
                 }if(category.equals(categoryExp[3])){
                     title=getRandomElement(expTravelTitle);
                     amount = getRandomAmount(500);

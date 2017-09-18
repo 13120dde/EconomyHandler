@@ -7,7 +7,7 @@ import java.util.HashMap;
 import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.R;
 import a13solutions.myEco.dbHelpers.DBManager;
-import a13solutions.myEco.dbHelpers.UserDBHelper;
+import a13solutions.myEco.dbHelpers.DBHelper;
 
 /**
  * Created by 13120dde on 2017-09-14.
@@ -34,12 +34,12 @@ public class LogicLogin {
         if(res.isSuccess()){
             HashMap<String, String> vals = res.getVals();
 
-            if(vals.get(UserDBHelper.COLUMN_PASSWORD).equals(password)){
+            if(vals.get(DBHelper.USER_COLUMN_PASSWORD).equals(password)){
 
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean(activity.getString(R.string.USER_IS_LOGGEDIN), true);
-                editor.putString(activity.getString(R.string.USER_FIRST_NAME), vals.get(UserDBHelper.COLUMN_FIRST_NAME));
-                editor.putString(activity.getString(R.string.USER_SURNAME), vals.get(UserDBHelper.COLUMN_SURNAME));
+                editor.putString(activity.getString(R.string.USER_FIRST_NAME), vals.get(DBHelper.USER_COLUMN_FIRST_NAME));
+                editor.putString(activity.getString(R.string.USER_SURNAME), vals.get(DBHelper.USER_COLUMN_SURNAME));
                 editor.putString(activity.getString(R.string.USER_EMAIL), email);
                 editor.putString(activity.getString(R.string.USER_PASSWORD),password);
 
