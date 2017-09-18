@@ -85,7 +85,9 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter{
         }
 
         TextView heading = (TextView) view.findViewById(R.id.tvListItemHeader);
+        TextView amount = (TextView) view.findViewById(R.id.tvItemAmount);
         heading.setText(headerInfo.getTitle().trim());
+        amount.setText(Double.toString(headerInfo.getAmount()));
 
         return view;
     }

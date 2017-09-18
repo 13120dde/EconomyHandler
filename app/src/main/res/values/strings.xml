@@ -49,6 +49,7 @@
     <string name="tv_fragment_type_income">Add income</string>
     <string name="tv_total_income">Total income</string>
     <string name="tv_total_expenditure">Total expenditure</string>
+    <string name="tv_currency">kr</string>
 
 
     <!-- Category Strings -->

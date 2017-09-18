@@ -28,7 +28,6 @@ import a13solutions.myEco.model.ListItemInfo;
  */
 public class FragmentListExpInc extends Fragment implements FragmentMethods {
 
-    private int typeOfFragment;
     private String fragmentTitle;
     private boolean isExpanded;
 
@@ -36,14 +35,15 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
     private ImageButton btnExpandCollapse;
     private DialogFragment datePicker = new DatePickerFragment();
 
+
     //Expandable list declarations
-    private LinkedHashMap<String, ListItemInfo> subjects = new LinkedHashMap<String, ListItemInfo>();
-    private ArrayList<ListItemInfo> deptList = new ArrayList<ListItemInfo>();
     private ExpandableListViewAdapter listAdapter;
     private ExpandableListView listView;
 
     //Other structure for list
     private ArrayList<ListItemInfo> listItems = new ArrayList<>();
+    DataFragment dataFragment;
+    private double totalAmount=0;
 
 
 
@@ -54,11 +54,9 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        typeOfFragment = getArguments().getInt(getString(R.string.ARG_FRAGMENT_NUMBER));
         fragmentTitle = getArguments().getString(getString(R.string.ARG_FRAGMENT_TITLE));
+        dataFragment= (DataFragment) getActivity().getFragmentManager().findFragmentByTag(DataFragment.DATA_TAG);
         isExpanded=false;
-        //EXOANDABLE LIST
-        loadData();
     }
 
 
@@ -70,6 +68,7 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
         View rootView = inflater.inflate(R.layout.fragment_fragment_list_exp_inc, container, false);
         instantiateComponents(rootView);
         addListeners();
+        loadData();
         return rootView;
     }
 
@@ -94,63 +93,23 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
     //load some initial data into out list
     private void loadData(){
 
-        if(fragmentTitle.equals(getString(R.string.fragment_incomes))){
-            //TODO fetch data from db set on chosen dates
-        }
-        if(fragmentTitle.equals(getString(R.string.fragment_incomes))){
-            //TODO fetch data from db set on chosen dates
-        }
 
-        //TODO remove after data is loaded from db
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-        addProduct("Android","ListView", "11-02-2015", 200,0);
-        addProduct("Android","Food", "11-02-2015",134.50, 0);
-        addProduct("Java","Leisure", "11-02-2015", 44,0);
-        addProduct("Java","Other", "11-02-2015", 32.99,0);
-
+        if(fragmentTitle.equals(getString(R.string.fragment_incomes))){
+            for(int i=0; i<dataFragment.getIncomesSize();i++){
+                addProduct(dataFragment.getIncomeTitle(i), dataFragment.getIncomeCategory(i),
+                dataFragment.getIncomeDate(i), dataFragment.getIncomeAmount(i),
+                0);
+            }
+//            tvSummary.setText(Double.toString(dataFragment.getTotalIncomeAmount()));
+        }
+        if(fragmentTitle.equals(getString(R.string.fragment_expenditures))){
+            for(int i =0; i<dataFragment.getExpendituresSize();i++){
+                addProduct(dataFragment.getExpenditureTitle(i),dataFragment.getExpenditureCategory(i),
+                        dataFragment.getExpenditureDate(i), dataFragment.getExpenditureAmount(i),
+                        0);
+            }
+  //          tvSummary.setText(Double.toString(dataFragment.getTotalExpenditureAmount()));
+        }
     }
 
     private int addProduct(String title, String date, String category, double amounmt, int itemId){
@@ -190,25 +149,21 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
 
         btnExpandCollapse = rootView.findViewById(R.id.btnExpandCollapseAll);
 
-
-
-        DataFragment f = (DataFragment) getActivity().getFragmentManager().findFragmentByTag(DataFragment.DATA_TAG);
-        tvDateFrom.setText(f.getDateFrom());
-        tvDateTo.setText(f.getDateTo());
+        tvDateFrom.setText(dataFragment.getDateFrom());
+        tvDateTo.setText(dataFragment.getDateTo());
 
         if(fragmentTitle.equals(getString(R.string.fragment_incomes))){
             tvBottom.setText(R.string.tv_total_income);
-            //TODO calculate total incomes
         }
         if(fragmentTitle.equals(getString(R.string.fragment_expenditures))){
             tvBottom.setText(R.string.tv_total_expenditure);
-            //TODO calculate total expenditures
         }
+
+
     }
 
     @Override
     public void setDate() {
-        DataFragment dataFragment = (DataFragment) getActivity().getFragmentManager().findFragmentByTag(DataFragment.DATA_TAG);
 
         tvDateFrom.setText(dataFragment.getDateFrom());
         tvDateTo.setText(dataFragment.getDateTo());

@@ -5,14 +5,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import a13solutions.myEco.MainActivity;
+import a13solutions.myEco.model.DataFragment;
+import a13solutions.myEco.model.ExpIncItem;
 import a13solutions.myEco.model.ReturnPacket;
 
 import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_AMOUNT;
 import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_CATEGORY;
 import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_DATE;
+import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_ID;
 import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_TITLE;
 import static a13solutions.myEco.dbHelpers.DBHelper.EX_INC_COLUMN_USER_EMAIL;
 import static a13solutions.myEco.dbHelpers.DBHelper.EXPENDITURE_TABLE_NAME;
@@ -131,36 +135,54 @@ public final class DBManager {
 
 
 
-    public void getExpenditures(String email, String dateFrom, String dateTo) {
+    public ArrayList<ExpIncItem> getExpenditures(String email, String dateFrom, String dateTo, ArrayList<ExpIncItem> expenditureArray) {
         dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getReadableDatabase();
-        cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
-                +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE
-                +"FROM "+EXPENDITURE_TABLE_NAME +" JOIN "+USER_TABLE_NAME
-                +" ON "+ EX_INC_COLUMN_USER_EMAIL +" = "+USER_COLUMN_EMAIL
-                +" WHERE "+ EX_INC_COLUMN_DATE +" BETWEEN '"+dateFrom+"' AND '"+dateTo+"'"
-                ,null);
-    }
+        int index = 0;
 
-    public void getIncomes(String email, String dateFrom, String dateTo) {
-        dbHelperUser = new DBHelper(actvity);
-        db = dbHelperUser.getReadableDatabase();
         cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
-                        +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE
-                        +"FROM "+INCOME_TABLE_NAME +" JOIN "+USER_TABLE_NAME
-                        +" ON "+ EX_INC_COLUMN_USER_EMAIL +" = "+USER_COLUMN_EMAIL
-                        +" WHERE "+ EX_INC_COLUMN_DATE +" BETWEEN '"+dateFrom+"' AND '"+dateTo+"'"
+                +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE+", "+EX_INC_COLUMN_ID
+                +" FROM "+EXPENDITURE_TABLE_NAME
+                +" WHERE "+EX_INC_COLUMN_USER_EMAIL+" = '"+email+"' AND ("
+                + EX_INC_COLUMN_DATE +" BETWEEN '"+dateFrom+"' AND '"+dateTo+"')"
                 ,null);
 
-        int titleIndex = cursor.getColumnIndex(EX_INC_COLUMN_TITLE);
-        int categoryIndex = cursor.getColumnIndex(EX_INC_COLUMN_CATEGORY);
-        int dateIndex = cursor.getColumnIndex(EX_INC_COLUMN_DATE);
-        int amountIndex = cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT);
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 
-
-        while (cursor.moveToNext()){
-
+            String title = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_TITLE));
+            String category = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_CATEGORY));
+            String date = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_DATE));
+            double amount = cursor.getDouble(cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT));
+            int key = cursor.getInt(cursor.getColumnIndex(EX_INC_COLUMN_ID));
+            expenditureArray.add(new ExpIncItem(title,category,date,amount,key,index));
+            index++;
         }
+
+        return expenditureArray;
     }
 
+    public ArrayList<ExpIncItem> getIncomes(String email, String dateFrom, String dateTo, ArrayList<ExpIncItem> incomeArray) {
+        dbHelperUser = new DBHelper(actvity);
+        db = dbHelperUser.getReadableDatabase();
+        int index = 0;
+
+        cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
+                        +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE+", "+EX_INC_COLUMN_ID
+                        +" FROM "+INCOME_TABLE_NAME
+                        +" WHERE "+EX_INC_COLUMN_USER_EMAIL+" = '"+email+"' AND ("
+                        + EX_INC_COLUMN_DATE +" BETWEEN '"+dateFrom+"' AND '"+dateTo+"')"
+                ,null);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            String title = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_TITLE));
+            String category = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_CATEGORY));
+            String date = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_DATE));
+            double amount = cursor.getDouble(cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT));
+            int key = cursor.getInt(cursor.getColumnIndex(EX_INC_COLUMN_ID));
+            incomeArray.add(new ExpIncItem(title,category,date,amount,key,index));
+            index++;
+        }
+
+        return incomeArray;
+    }
 }

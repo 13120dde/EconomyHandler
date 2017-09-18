@@ -1,12 +1,20 @@
 package a13solutions.myEco.model;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+
+import a13solutions.myEco.MainActivity;
+import a13solutions.myEco.R;
+import a13solutions.myEco.dbHelpers.DBManager;
 
 
 /**
@@ -18,7 +26,42 @@ public class DataFragment extends Fragment{
     private final String LOG_TAG="IN_DATA";
     public static final String DATA_TAG="data";
 
-    public String date, chosenDate, dateFrom, dateTo;
+    private String date, chosenDate, dateFrom, dateTo;
+    private double totalExpenditureAmount, totalIncomeAmount;
+    private ArrayList<ExpIncItem> listIncome, listExpenditure;
+
+    public ArrayList<ExpIncItem> getIncomesArray() {
+        return listIncome;
+    }
+
+    public void setIncomesArray(ArrayList<ExpIncItem> incomes) {
+        this.listIncome = incomes;
+    }
+
+    public ArrayList<ExpIncItem> getExpendituresArray() {
+        return listExpenditure;
+    }
+
+    public void setExpendituresArray(ArrayList<ExpIncItem> expenditures) {
+        this.listExpenditure= expenditures;
+    }
+
+
+    public double getTotalExpenditureAmount() {
+        return totalExpenditureAmount;
+    }
+
+    public void setTotalExpenditureAmount(double totalExpenditureAmount) {
+        this.totalExpenditureAmount = totalExpenditureAmount;
+    }
+
+    public double getTotalIncomeAmount() {
+        return totalIncomeAmount;
+    }
+
+    public void setTotalIncomeAmount(double totalIncomeAmount) {
+        this.totalIncomeAmount = totalIncomeAmount;
+    }
 
     public String getDate() {
         return date;
@@ -37,7 +80,26 @@ public class DataFragment extends Fragment{
         dateFrom = date;
         dateTo = UtlilityMethods.addOneMonth(date);
 
+        //Load some initial data from db
+        MainActivity activity = (MainActivity) getActivity();
+        Resources res = activity.getResources();
+        SharedPreferences sp = activity.getSharedPreferences(activity.getString(R.string.ECONOMYHANDLER_USER_DATA),
+                activity.MODE_PRIVATE);
+        String email = sp.getString(res.getString(R.string.USER_EMAIL), "");
+        listIncome = new ArrayList<ExpIncItem>();
+        listExpenditure = new ArrayList<ExpIncItem>();
+        listIncome= new DBManager(activity).getIncomes(email,dateFrom,dateTo,listIncome);
+        listExpenditure = new DBManager(activity).getExpenditures(email,dateFrom,dateTo,listExpenditure);
+        //printArray(listIncome);
+        printArray(listExpenditure);
+    }
 
+    private void printArray(ArrayList<ExpIncItem> listExpenditure) {
+        for (int i = 0; i<listExpenditure.size();i++){
+            Log.d("IN_PRINT_ARR", listExpenditure.get(i).getTitle()+" | "+listExpenditure.get(i).getCategory()+" | "
+            +listExpenditure.get(i).getDate()+" | "+listExpenditure.get(i).getAmount()+" | "
+            +listExpenditure.get(i).getKeyInDb()+" | ");
+        }
     }
 
     public void setChosenDate(int year, int month, int day) {
@@ -59,4 +121,55 @@ public class DataFragment extends Fragment{
     public String getDateFrom() {
         return dateFrom;
     }
+
+    public int getIncomesSize(){
+        Log.d("IN_DATAG", "getIncomes: "+listIncome.size());
+        return listIncome.size();
+    }
+
+    public String getIncomeTitle(int i) {
+        return listIncome.get(i).getTitle();
+    }
+
+    public String getIncomeCategory(int i) {
+        return listIncome.get(i).getCategory();
+    }
+
+    public String getIncomeDate(int i) {
+        return listIncome.get(i).getDate();
+    }
+
+    public double getIncomeAmount(int i) {
+        return listIncome.get(i).getAmount();
+    }
+
+    public int getIncomeIndex(int i) {
+        return listIncome.get(i).getIndex();
+    }
+
+    public int getExpendituresSize() {
+        Log.d("IN_DATAG", "getExpendituresSize: "+listExpenditure.size());
+        return listExpenditure.size();
+    }
+
+    public String getExpenditureTitle(int i) {
+        return listExpenditure.get(i).getTitle();
+    }
+
+    public String getExpenditureCategory(int i) {
+        return listExpenditure.get(i).getCategory();
+    }
+
+    public String getExpenditureDate(int i) {
+        return listExpenditure.get(i).getDate();
+    }
+
+    public double getExpenditureAmount(int i) {
+        return listExpenditure.get(i).getAmount();
+    }
+
+    public int getExpenditureIndex(int i) {
+        return listExpenditure.get(i).getIndex();
+    }
+
 }
