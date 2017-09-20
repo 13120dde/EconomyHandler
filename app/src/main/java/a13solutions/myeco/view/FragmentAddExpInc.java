@@ -140,10 +140,6 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
                     etTitle.setText("");
                     ((MainActivity) getActivity()).hideKeyboard();
                 };
-
-                //Just to fill db with some data
-               // logicAddExpInc.populateEmptyTable();
-
             }
         });
 

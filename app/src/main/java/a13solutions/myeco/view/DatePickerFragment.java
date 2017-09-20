@@ -40,7 +40,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         DataFragment data = (DataFragment) getFragmentManager().findFragmentByTag(DataFragment.DATA_TAG);
         Fragment targetFragment =  getTargetFragment();
 
-        if(targetFragment instanceof FragmentAddExpInc){
+        if(targetFragment instanceof FragmentAddExpInc || targetFragment instanceof FragmentHome){
             data.setChosenDate(year,++month,day);
         }
         if(targetFragment instanceof FragmentListExpInc){

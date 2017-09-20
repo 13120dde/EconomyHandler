@@ -8,7 +8,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,17 +23,13 @@ import a13solutions.myEco.model.DataFragment;
 import a13solutions.myEco.view.FragmentHome;
 import a13solutions.myEco.view.FragmentListExpInc;
 import a13solutions.myEco.view.FragmentLogin;
-import a13solutions.myEco.view.FragmentMethods;
 import a13solutions.myEco.view.FragmentRegister;
 import a13solutions.myEco.view.FragmentAddExpInc;
 import a13solutions.myEco.model.ItemSlideMenu;
 
-/**The skeleton code for an app that shows all it's UI components in MainActivity's frame by
- * chosing an item to show from the sliding-menu implemented in this project.
- *
- * This project follows MVC-pattern and all the logic should be implemented in the Controller
- * class.
- *
+/**
+ * This project follows 1 Activity - multiple Fragments paradigm which is a realisation of MVC-pattern.
+ *The main Activity swaps Fragments in and out depending on the selected item in menu drawer.
  * Created by: 13120dde on 2017-09-12
  *
  */
@@ -90,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(getString(R.string.USER_IS_LOGGEDIN), false);
         editor.commit();
-        //TODO CREATE SQLTABLEs
     }
 
     private void initDataFragment() {
@@ -202,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
     }
 
-    /**Rnstantiate and return a new fragment. The type of fragment returned is based on the int
+    /**Instantiate and return a new fragment. The type of fragment returned is based on the int
      * passed in as argument.
      *
      * @param fragmentTitle : int
@@ -240,8 +234,7 @@ public class MainActivity extends AppCompatActivity {
         return fragment;
     }
 
-    /**Populates the List-object passed in as arguments with new menu-items. Returns the populated
-     * list.*
+    /**Populates the List-object passed in as arguments with new menu-items.
      */
     public void addItemsToSlidingList() {
 
