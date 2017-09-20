@@ -15,18 +15,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="serif"
             android:paddingLeft="30sp"
             android:textAlignment="viewStart"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorBlue"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvItemAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="serif"
             android:textAlignment="viewEnd"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>

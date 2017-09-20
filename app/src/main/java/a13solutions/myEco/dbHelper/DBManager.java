@@ -59,6 +59,7 @@ public final class DBManager {
         values.put(EX_INC_COLUMN_AMOUNT, amountReal);
         values.put(EX_INC_COLUMN_DATE, date);
         db.insert(INCOME_TABLE_NAME,"",values);
+        Log.d("DB_PUT_INCOME",email+title+category+date+amountReal);
     }
 
     public void putExpenditure(String email, String title, String category, String date, double amountReal) {
@@ -71,6 +72,7 @@ public final class DBManager {
         values.put(EX_INC_COLUMN_AMOUNT, amountReal);
         values.put(EX_INC_COLUMN_DATE, date);
         db.insert(EXPENDITURE_TABLE_NAME,"",values);
+        Log.d("DB_PUT_EXPENDITURE",email+title+category+date+amountReal);
 
     }
 
@@ -137,7 +139,6 @@ public final class DBManager {
         db = dbHelperUser.getReadableDatabase();
         ArrayList<ExpIncItem> expenditureArray = new ArrayList<>();
         int index = 0;
-        double totalAmount=0;
 
         cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
                 +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE+", "+EX_INC_COLUMN_ID
@@ -155,11 +156,8 @@ public final class DBManager {
             int key = cursor.getInt(cursor.getColumnIndex(EX_INC_COLUMN_ID));
             expenditureArray.add(new ExpIncItem(title,category,date,amount,key,index));
             index++;
-            totalAmount+=amount;
         }
 
-        //just to skip iterating trough array later to calculate total amount
-        expenditureArray.add(new ExpIncItem("","","",totalAmount,0,0));
         return expenditureArray;
     }
 
@@ -168,7 +166,6 @@ public final class DBManager {
         db = dbHelperUser.getReadableDatabase();
         ArrayList<ExpIncItem> incomeArray = new ArrayList<>();
         int index = 0;
-        double totalAmount=0;
 
         cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
                         +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE+", "+EX_INC_COLUMN_ID
@@ -183,14 +180,57 @@ public final class DBManager {
             String date = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_DATE));
             double amount = cursor.getDouble(cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT));
             int key = cursor.getInt(cursor.getColumnIndex(EX_INC_COLUMN_ID));
-
-            incomeArray.add(new ExpIncItem(title,category,date,amount,key,index));
-            totalAmount+=amount;
+            ExpIncItem item = new ExpIncItem(title,category,date,amount,key,index);
+            Log.d("IN_DB","getIncomes():"+item.toString());
+            incomeArray.add(item);
             index++;
         }
 
-        //just to skip iterating trough array later to calculate total amount
-        incomeArray.add(new ExpIncItem("","","",totalAmount,0,0));
         return incomeArray;
     }
+    public ArrayList<ExpIncItem> getIncomesByDay(String email, String date) {
+        dbHelperUser = new DBHelper(actvity);
+        db = dbHelperUser.getReadableDatabase();
+        ArrayList<ExpIncItem> incomeArray = new ArrayList<>();
+
+        cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_CATEGORY+", " +EX_INC_COLUMN_AMOUNT
+                        +" FROM "+INCOME_TABLE_NAME
+                        +" WHERE "+EX_INC_COLUMN_USER_EMAIL+" = '"+email
+                        +"' AND " + EX_INC_COLUMN_DATE +" = '"+date+"')"
+                ,null);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            String category = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_CATEGORY));
+            double amount = cursor.getDouble(cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT));
+            ExpIncItem item = new ExpIncItem("",category,date,amount,0,0);
+            Log.d("IN_DB","getIncomes():"+item.toString());
+            incomeArray.add(item);
+        }
+
+        return incomeArray;
+    }
+
+    public ArrayList<ExpIncItem> getExpendituresByDay(String email, String date) {
+        dbHelperUser = new DBHelper(actvity);
+        db = dbHelperUser.getReadableDatabase();
+        ArrayList<ExpIncItem> expenditureArray = new ArrayList<>();
+
+        cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_CATEGORY+", " +EX_INC_COLUMN_AMOUNT
+                        +" FROM "+EXPENDITURE_TABLE_NAME
+                        +" WHERE "+EX_INC_COLUMN_USER_EMAIL+" = '"+email
+                        +"' AND " + EX_INC_COLUMN_DATE +" = '"+date+"')"
+                ,null);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            String category = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_CATEGORY));
+            double amount = cursor.getDouble(cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT));
+            ExpIncItem item = new ExpIncItem("",category,date,amount,0,0);
+            Log.d("IN_DB","getIncomes():"+item.toString());
+            expenditureArray.add(item);
+        }
+
+        return expenditureArray;
+    }
+
+
 }

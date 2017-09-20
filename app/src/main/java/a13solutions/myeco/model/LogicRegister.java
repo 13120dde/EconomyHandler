@@ -1,6 +1,14 @@
 package a13solutions.myEco.model;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.util.Log;
+
+import java.util.Random;
+
 import a13solutions.myEco.MainActivity;
+import a13solutions.myEco.R;
 import a13solutions.myEco.dbHelper.DBManager;
 
 /**
@@ -110,11 +118,19 @@ public class LogicRegister {
 
         if(allSuccessfull){
             dbManager.registerUser(email,password,firstName,surname);
+            Log.d("IN_email",email);
+
+            //TODO remove this line!
+            UtilityMethods.populateEmptyTable(email,activity);
+
             resultInfo="Registration complete.\nProcede to login.";
             activity.showHomeFragment();
+
         }
 
-        UtlilityMethods.showNeutralDialog(resultTitle,resultInfo, activity);
+        UtilityMethods.showNeutralDialog(resultTitle,resultInfo, activity);
         return allSuccessfull;
     }
+
+
 }

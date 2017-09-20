@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:fontFamily="serif"
         android:paddingLeft="35sp"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -18,5 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/tvDateCreated"
+        android:fontFamily="serif"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </LinearLayout>

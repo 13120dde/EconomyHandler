@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/textViewSpinner"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="5dp"
+    android:background="@color/colorPurple"
+    android:orientation="vertical"
+    android:textColor="@drawable/spinner_item_selected"
+    android:textSize="18dp"
+    android:elevation="4dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    >
+
+</TextView>

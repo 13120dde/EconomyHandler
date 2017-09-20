@@ -8,8 +8,11 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 
@@ -20,7 +23,7 @@ import a13solutions.myEco.adapter.ExpandableListViewAdapter;
 import a13solutions.myEco.model.ChildInfo;
 import a13solutions.myEco.model.DataFragment;
 import a13solutions.myEco.model.ListItemInfo;
-import a13solutions.myEco.model.UtlilityMethods;
+import a13solutions.myEco.model.UtilityMethods;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +36,7 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
     private TextView tvDateFrom, tvDateTo, tvBottom, tvSummary;
     private ImageButton btnExpandCollapse;
     private DialogFragment datePicker = new DatePickerFragment();
+    private Spinner spinSortBy;
 
 
     //Expandable list declarations
@@ -42,9 +46,6 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
     //Other structure for list
     private ArrayList<ListItemInfo> listItems = new ArrayList<>();
     DataFragment dataFragment;
-    private double totalAmount=0;
-
-
 
     public FragmentListExpInc() {
         // Required empty public constructor
@@ -67,14 +68,15 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
         View rootView = inflater.inflate(R.layout.fragment_fragment_list_exp_inc, container, false);
         instantiateComponents(rootView);
         addListeners();
-        loadData();
+        updateData();
+        dataFragment.setSortingCategory(DataFragment.SortingCategory.DATE_DESC);
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        loadData();
+        updateData();
 
     }
 
@@ -106,25 +108,23 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
         listItems.clear();
         listAdapter.notifyDataSetChanged();
         collapseAll();
-        DataFragment data = (DataFragment) getFragmentManager().findFragmentByTag(DataFragment.DATA_TAG);
+
 
         if(fragmentTitle.equals(getString(R.string.fragment_incomes))){
-            data.getIncomesFromDb();
             for(int i=0; i<dataFragment.getIncomesSize();i++){
                 addProduct(dataFragment.getIncomeTitle(i), dataFragment.getIncomeCategory(i),
                 dataFragment.getIncomeDate(i), dataFragment.getIncomeAmount(i),
                 0);
             }
-            tvSummary.setText(UtlilityMethods.roundTwoDecimals(dataFragment.getTotalIncomeAmount())+getString(R.string.tv_currency));
+            tvSummary.setText(UtilityMethods.roundTwoDecimals(dataFragment.getTotalIncomeAmount())+getString(R.string.tv_currency));
         }
         if(fragmentTitle.equals(getString(R.string.fragment_expenditures))){
-            data.getExpendituresFromDb();
             for(int i =0; i<dataFragment.getExpendituresSize();i++){
                 addProduct(dataFragment.getExpenditureTitle(i),dataFragment.getExpenditureCategory(i),
                 dataFragment.getExpenditureDate(i), dataFragment.getExpenditureAmount(i),
                 0);
             }
-            tvSummary.setText(UtlilityMethods.roundTwoDecimals(dataFragment.getTotalExpenditureAmount())+getString(R.string.tv_currency));
+            tvSummary.setText(UtilityMethods.roundTwoDecimals(dataFragment.getTotalExpenditureAmount())+getString(R.string.tv_currency));
         }
     }
 
@@ -144,14 +144,48 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
         tvDateFrom.setOnClickListener(listener);
         tvDateTo.setOnClickListener(listener);
 
+        spinSortBy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selected = adapterView.getItemAtPosition(i).toString();
+                if(selected.equals("Date descending")){
+                    dataFragment.setSortingCategory(DataFragment.SortingCategory.DATE_DESC);
+                }if(selected.equals("Date ascending")){
+                    dataFragment.setSortingCategory(DataFragment.SortingCategory.DATE_ASC);
+                }if(selected.equals("Amount descending")){
+                    dataFragment.setSortingCategory(DataFragment.SortingCategory.AMOUNT_DESC);
+
+                }if(selected.equals("Amount ascending")){
+                    dataFragment.setSortingCategory(DataFragment.SortingCategory.AMOUNT_ASC);
+
+                }if(selected.equals("Category")){
+                    dataFragment.setSortingCategory(DataFragment.SortingCategory.CATEGORY);
+                }
+
+               if(fragmentTitle.equals(getString(R.string.fragment_expenditures))){
+                   dataFragment.setDataType(DataFragment.DataType.EXPENDITURE);
+               }
+               if(fragmentTitle.equals(getString(R.string.fragment_incomes))){
+                   dataFragment.setDataType(DataFragment.DataType.INCOME);
+               }
+               dataFragment.sortData();
+               loadData();
+            }
+
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
     }
 
     private void instantiateComponents(View rootView) {
 
         listView = (ExpandableListView) rootView.findViewById(R.id.lvEpandableList);
-        // create the adapter by passing your ArrayList data
         listAdapter = new ExpandableListViewAdapter(getActivity(), listItems);
-        // attach the adapter to the expandable list view
         listView.setAdapter(listAdapter);
 
         datePicker.setShowsDialog(true);
@@ -162,8 +196,10 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
         tvDateTo = rootView.findViewById(R.id.tvDateTo);
         tvBottom= rootView.findViewById(R.id.tvBottom);
         tvSummary= rootView.findViewById(R.id.tvSummary);
-
         btnExpandCollapse = rootView.findViewById(R.id.btnExpandCollapseAll);
+        spinSortBy = rootView.findViewById(R.id.spinnerListSort);
+        ArrayAdapter<CharSequence> spinAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.category_sort, R.layout.tv_spinner);
+        spinSortBy.setAdapter(spinAdapter);
 
         tvDateFrom.setText(dataFragment.getDateFrom());
         tvDateTo.setText(dataFragment.getDateTo());
@@ -178,15 +214,19 @@ public class FragmentListExpInc extends Fragment implements FragmentMethods {
 
     }
 
-    public String getFragmentTitle() {
-        return fragmentTitle;
-    }
-
     @Override
     public void updateData() {
 
         tvDateFrom.setText(dataFragment.getDateFrom());
         tvDateTo.setText(dataFragment.getDateTo());
+
+
+        if(fragmentTitle.equals(getString(R.string.fragment_incomes))){
+            dataFragment.getIncomesFromDb();
+        }if(fragmentTitle.equals(getString(R.string.fragment_expenditures))){
+            dataFragment.getExpendituresFromDb();
+        }
+
         loadData();
 
     }

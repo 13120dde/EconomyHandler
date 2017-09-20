@@ -6,6 +6,8 @@
     <string name="drawer_opened">Opened</string>
     <string name="drawer_closed">Closed</string>
 
+    <string name="monthly_expenditures">Monthly expenditures</string>
+
     <!-- Sharedpreferences keys-->
     <string name="ECONOMYHANDLER_USER_DATA">SP_USER_DATA</string>
     <string name="USER_EMAIL">USER_EMAIL</string>
@@ -50,6 +52,9 @@
     <string name="tv_total_income">Total income</string>
     <string name="tv_total_expenditure">Total expenditure</string>
     <string name="tv_currency"> kr</string>
+    <string name="tv_welcome">Welcome</string>
+    <string name="tv_welcome_message_not_signedin">Login or register</string>
+    <string name="tv_welcome_message_signedin">Signed in as: </string>
 
 
     <!-- Category Strings -->
@@ -64,6 +69,14 @@
         <item>Leisure</item>
         <item>Travel</item>
         <item>Other</item>
+    </string-array>
+
+    <string-array name="category_sort">
+        <item>Date descending</item>
+        <item>Date ascending</item>
+        <item>Amount descending</item>
+        <item>Amount ascending</item>
+        <item>Category</item>
     </string-array>
 
 

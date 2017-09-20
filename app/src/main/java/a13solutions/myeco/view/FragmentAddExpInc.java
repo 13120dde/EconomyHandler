@@ -142,7 +142,7 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
                 };
 
                 //Just to fill db with some data
-                //logicAddExpInc.fillDbWithIncomesExpenditures();
+               // logicAddExpInc.populateEmptyTable();
 
             }
         });

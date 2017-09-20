@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="a13solutions.myEco.view.FragmentListExpIncN">
+    tools:context="a13solutions.myEco.view.FragmentListExpInc">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -26,41 +26,69 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="serif"
+            android:paddingLeft="10dp"
             android:textAlignment="viewStart"
             android:textColor="@color/colorBlue"
             android:textSize="18sp"
-            android:textStyle="italic"
-            android:paddingLeft="10dp"/>
+            android:textStyle="italic" />
 
         <TextView
             android:id="@+id/tvDateTo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="serif"
+            android:paddingRight="10dp"
             android:textAlignment="viewEnd"
             android:textColor="@color/colorBlue"
             android:textSize="18sp"
-            android:textStyle="italic"
-            android:paddingRight="10dp"/>
+            android:textStyle="italic" />
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/btnExpandCollapseAll"
-        style="@android:style/Widget.DeviceDefault.Light.ImageButton"
+    <LinearLayout
+        android:id="@+id/containerListMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="false"
-        android:background="@color/colorPurple"
-        android:elevation="4dp"
-        android:paddingRight="10dp"
-        android:scaleType="fitEnd"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/containerForDates"
-        app:srcCompat="@drawable/ic_expand_white" />
+        android:background="@color/colorPurple"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp">
+
+        <Spinner
+            android:id="@+id/spinnerListSort"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:backgroundTint="#fff"
+            />
+
+        <TextView
+            android:id="@+id/tvInvisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
+
+        <ImageButton
+            android:id="@+id/btnExpandCollapseAll"
+            style="@android:style/Widget.DeviceDefault.Light.ImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
+            android:background="@null"
+            android:paddingRight="10dp"
+            android:scaleType="fitEnd"
+            app:srcCompat="@drawable/ic_expand_white"
+            tools:layout_editor_absoluteX="342dp"
+            tools:layout_editor_absoluteY="46dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/bottomFragment"
@@ -79,6 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="serif"
             android:textAlignment="viewStart"
             android:textColor="@android:color/background_light"
             android:textSize="18sp" />
@@ -88,6 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="serif"
             android:textAlignment="viewEnd"
             android:textColor="@android:color/background_light"
             android:textSize="24sp"
@@ -98,15 +128,14 @@
         android:id="@+id/lvEpandableList"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:paddingRight="10dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomFragment"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnExpandCollapseAll"
-        app:layout_constraintVertical_bias="0.0"
-        android:paddingRight="10dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        app:layout_constraintTop_toBottomOf="@+id/containerListMenu" />
 </android.support.constraint.ConstraintLayout>

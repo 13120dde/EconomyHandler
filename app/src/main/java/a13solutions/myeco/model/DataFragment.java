@@ -7,15 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 
 import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.R;
-import a13solutions.myEco.comparator.ComparatorAmount;
-import a13solutions.myEco.comparator.ComparatorDateAscending;
+import a13solutions.myEco.comparator.Sort;
 import a13solutions.myEco.dbHelper.DBManager;
 
 
@@ -25,6 +21,21 @@ import a13solutions.myEco.dbHelper.DBManager;
 
 public class DataFragment extends Fragment{
 
+    public enum DataType{
+        EXPENDITURE,
+        INCOME;
+    }
+    public enum SortingCategory{
+        CATEGORY,
+        DATE_ASC,
+        DATE_DESC,
+        AMOUNT_ASC,
+        AMOUNT_DESC,
+        ADDED_ASC,
+        ADDED_DESC;
+
+    }
+
     private final String LOG_TAG="IN_DATA";
     public static final String DATA_TAG="data";
     MainActivity activity;
@@ -32,6 +43,9 @@ public class DataFragment extends Fragment{
     private String date, chosenDate, dateFrom, dateTo, email;
     private double totalExpenditureAmount, totalIncomeAmount;
     private ArrayList<ExpIncItem> listIncome, listExpenditure;
+
+    private DataType dataType;
+    private SortingCategory sortingCategory;
 
     public ArrayList<ExpIncItem> getIncomesArray() {
         return listIncome;
@@ -47,6 +61,13 @@ public class DataFragment extends Fragment{
 
     public void setExpendituresArray(ArrayList<ExpIncItem> expenditures) {
         this.listExpenditure= expenditures;
+    }
+
+    public void setSortingCategory(SortingCategory sortingCategory) {
+        this.sortingCategory=sortingCategory;
+    }
+    public void setDataType(DataType dataType) {
+        this.dataType = dataType;
     }
 
 
@@ -79,9 +100,10 @@ public class DataFragment extends Fragment{
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         Log.d(LOG_TAG,"datafragment created");
-        date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        date = UtilityMethods.getCurrentDate();
         dateFrom = date;
-        dateTo = UtlilityMethods.addOneMonth(date);
+        dateTo = UtilityMethods.addOneMonth(date);
+        sortingCategory=SortingCategory.DATE_DESC;
 
         //Load some initial data from db
         activity = (MainActivity) getActivity();
@@ -95,44 +117,30 @@ public class DataFragment extends Fragment{
 
     public void getIncomesFromDb(){
         listIncome= new DBManager(activity).getIncomes(email,dateFrom,dateTo);
+        totalIncomeAmount = UtilityMethods.calculateTotalAmount(listIncome);
 
-        ExpIncItem totalAmount = listIncome.remove(listIncome.size()-1);
-        if(totalAmount!=null){
-            totalIncomeAmount = totalAmount.getAmount();
-        }
-        sortIncomesByDatesDescending();
-        printArray(listIncome);
+        dataType=DataType.INCOME;
+        sortData();
 
     }
 
     public void getExpendituresFromDb(){
         listExpenditure = new DBManager(activity).getExpenditures(email,dateFrom,dateTo);
-        ExpIncItem totalAmount = listExpenditure.remove(listExpenditure.size()-1);
-        if(totalAmount!=null){
-            totalExpenditureAmount = totalAmount.getAmount();
-        }
-        sortExpendituresByDateAscending();
-        printArray(listExpenditure);
-    }
-
-    private void printArray(ArrayList<ExpIncItem> listExpenditure) {
-        for (int i = 0; i<listExpenditure.size();i++){
-            Log.d("IN_PRINT_ARR", listExpenditure.get(i).getTitle()+" | "+listExpenditure.get(i).getCategory()+" | "
-            +listExpenditure.get(i).getDate()+" | "+listExpenditure.get(i).getAmount()+" | "
-            +listExpenditure.get(i).getKeyInDb()+" | ");
-        }
+            totalExpenditureAmount = UtilityMethods.calculateTotalAmount(listExpenditure);
+        dataType=DataType.EXPENDITURE;
+        sortData();
     }
 
     public void setChosenDate(int year, int month, int day) {
-        chosenDate= UtlilityMethods.formatDate(year,month,day);
+        chosenDate= UtilityMethods.formatDate(year,month,day);
     }
 
     public void setDateFrom(int year, int month, int day) {
-        dateFrom = UtlilityMethods.formatDate(year,month,day);
+        dateFrom = UtilityMethods.formatDate(year,month,day);
     }
 
     public void setDateTo(int year, int month, int day) {
-        dateTo = UtlilityMethods.formatDate(year, month, day);
+        dateTo = UtilityMethods.formatDate(year, month, day);
     }
 
     public String getDateTo() {
@@ -193,20 +201,47 @@ public class DataFragment extends Fragment{
         return listExpenditure.get(i).getIndex();
     }
 
-    public  void sortExpendituresByDateAscending(){
-        Collections.sort(listExpenditure, new ComparatorDateAscending());
+    public void sortData() {
+
+        if(dataType==DataType.EXPENDITURE){
+            switch (sortingCategory) {
+                case DATE_DESC:
+                    listExpenditure = Sort.dateDescending(listExpenditure);
+                    break;
+                case DATE_ASC:
+                    listExpenditure = Sort.dateAscending(listExpenditure);
+                    break;
+                case AMOUNT_DESC:
+                    listExpenditure = Sort.amountDescending(listExpenditure);
+                    break;
+                case AMOUNT_ASC:
+                    listExpenditure = Sort.amountAscending(listExpenditure);
+                    break;
+                case CATEGORY:
+                    listExpenditure = Sort.category(listExpenditure);;
+                    break;
+            }
+        }
+        if(dataType==DataType.INCOME){
+            switch (sortingCategory) {
+                case DATE_DESC:
+                    listIncome = Sort.dateDescending(listIncome);
+                    break;
+                case DATE_ASC:
+                    listIncome = Sort.dateAscending(listIncome);
+                    break;
+                case AMOUNT_DESC:
+                    listIncome= Sort.amountDescending(listIncome);
+                    break;
+                case AMOUNT_ASC:
+                    listIncome = Sort.amountAscending(listIncome);
+                    break;
+                case CATEGORY:
+                    listIncome = Sort.category(listIncome);
+                    break;
+            }
+        }
     }
 
-    public void sortIncomesByDatesAscending(){
-        Collections.sort(listIncome, new ComparatorDateAscending());
-    }
 
-    public void sortIncomesByAmount(){
-        Collections.sort(listIncome, new ComparatorAmount());
-    }
-
-    public void sortExpendituresByAmount(){
-        Collections.sort(listExpenditure, new ComparatorAmount());
-    }
-
-}
+            }

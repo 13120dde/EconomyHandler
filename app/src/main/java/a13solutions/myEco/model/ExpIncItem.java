@@ -59,5 +59,9 @@ public class ExpIncItem {
         this.index = index;
     }
 
+    public String toString(){
+        return date+" "+category+" "+title+" "+amount+" "+keyInDb+"\n";
+    }
+
 
 }

@@ -3,7 +3,7 @@ package a13solutions.myEco.comparator;
 import java.util.Comparator;
 
 import a13solutions.myEco.model.ExpIncItem;
-import a13solutions.myEco.model.UtlilityMethods;
+import a13solutions.myEco.model.UtilityMethods;
 
 /**
  * Created by 13120dde on 2017-09-18.
@@ -13,8 +13,8 @@ public class ComparatorDateDescending implements Comparator<ExpIncItem> {
 
     @Override
     public int compare(ExpIncItem item, ExpIncItem item2) {
-        int[] thisDate = UtlilityMethods.parseDateFromString(item.getDate());
-        int[] otherDate = UtlilityMethods.parseDateFromString(item2.getDate());
+        int[] thisDate = UtilityMethods.parseDateFromString(item.getDate());
+        int[] otherDate = UtilityMethods.parseDateFromString(item2.getDate());
 
         if(thisDate[0]<otherDate[0]){
             return 1;

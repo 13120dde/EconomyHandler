@@ -43,7 +43,7 @@ public class ListItemInfo {
     }
 
     public String getAmount() {
-        return UtlilityMethods.roundTwoDecimals(amount);
+        return UtilityMethods.roundTwoDecimals(amount);
     }
 
     public void setAmount(double amount) {

@@ -48,11 +48,11 @@ public class LogicLogin {
                 activity.showHomeFragment();
                 return true;
             }else{
-                UtlilityMethods.showNeutralDialog("Error", "Passwords don't match.", activity);
+                UtilityMethods.showNeutralDialog("Error", "Passwords don't match.", activity);
             }
 
         }else{
-            UtlilityMethods.showNeutralDialog("Error", res.getMessage(), activity);
+            UtilityMethods.showNeutralDialog("Error", res.getMessage(), activity);
         }
 
 
