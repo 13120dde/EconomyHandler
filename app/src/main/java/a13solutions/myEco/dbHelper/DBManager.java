@@ -4,11 +4,13 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import a13solutions.myEco.MainActivity;
+import a13solutions.myEco.R;
 import a13solutions.myEco.model.ExpIncItem;
 import a13solutions.myEco.model.ReturnPacket;
 
@@ -65,6 +67,7 @@ public final class DBManager {
         values.put(EX_INC_COLUMN_DATE, date);
         db.insert(INCOME_TABLE_NAME,"",values);
         Log.d("DB_PUT_INCOME",email+title+category+date+amountReal);
+        Toast.makeText(actvity, title+" - "+amountReal+" added in "+category, Toast.LENGTH_SHORT).show();
     }
 
     public void putExpenditureWithoutScan(String email, String title, String category, String date, double amountReal) {
@@ -78,6 +81,7 @@ public final class DBManager {
         values.put(EX_INC_COLUMN_DATE, date);
         db.insert(EXPENDITURE_TABLE_NAME,"",values);
         Log.d("DB_PUT_EXPENDITURE",email+title+category+date+amountReal);
+        Toast.makeText(actvity, title+" - "+amountReal+" added in "+category, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -95,7 +99,8 @@ public final class DBManager {
 
 
         Log.d("DB_PUT_SCANNED_EXP",email+title+category+date+amountReal);
-        db.close();
+        Toast.makeText(actvity, actvity.getString(R.string.scanner_value)+title+" - "+amountReal, Toast.LENGTH_SHORT).show();
+
     }
 
     public ReturnPacket getUserEmail(String email) {

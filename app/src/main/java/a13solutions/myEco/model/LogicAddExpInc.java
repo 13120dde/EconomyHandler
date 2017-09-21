@@ -82,7 +82,6 @@ public class LogicAddExpInc {
         if(resultFromDb!=null){
             new DBManager(activity).putExpenditureWithScan(email,resultFromDb.getTitle(),resultFromDb.getCategory(),
                     UtilityMethods.getCurrentDate(),resultFromDb.getAmount(),resultFromDb.getScanContent());
-            Toast.makeText(activity, activity.getString(R.string.scanner_value)+resultFromDb.getTitle()+" - "+resultFromDb.getAmount() , Toast.LENGTH_LONG).show();
 
             return true;
         }else{
