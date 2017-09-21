@@ -20,6 +20,7 @@ public class FragmentRegister extends Fragment implements FragmentMethods{
 
     private EditText etEmail, etPassword, etPasswordRepeat, etFirstName, etSurname;
     private Button btnRegister;
+    public static String fragmentTitle;
 
     public FragmentRegister() {
         // Required empty public constructor

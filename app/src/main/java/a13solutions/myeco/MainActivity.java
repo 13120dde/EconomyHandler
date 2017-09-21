@@ -1,5 +1,6 @@
 package a13solutions.myEco;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
@@ -14,12 +15,17 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import a13solutions.myEco.adapter.SlidingMenuAdapter;
 import a13solutions.myEco.model.DataFragment;
+import a13solutions.myEco.model.LogicAddExpInc;
 import a13solutions.myEco.view.FragmentHome;
 import a13solutions.myEco.view.FragmentListExpInc;
 import a13solutions.myEco.view.FragmentLogin;
@@ -74,6 +80,50 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             selectFragment(0, listSliding.get(0).getTitle());
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        boolean barcodeFound;
+        if(result != null) {
+            if(result.getContents() == null) {
+                Toast.makeText(this, getString(R.string.scanner_cancelled), Toast.LENGTH_LONG).show();
+            } else {
+                barcodeFound =  new LogicAddExpInc(this).addExpenditureWithScan(result.getContents());
+                if(!barcodeFound){
+                    Toast.makeText(this, getString(R.string.scanner_not_found) , Toast.LENGTH_LONG).show();
+                    selectFragment(1, getString(R.string.fragment_add_income_expenditure));
+                }
+                else {
+                    showHomeFragment();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -134,7 +184,12 @@ public class MainActivity extends AppCompatActivity {
                 if(listSliding.get(position).getTitle().equals(getString(R.string.fragment_logout))){
                     logout();
                     selectFragment(0, listSliding.get(0).getTitle());
-                }else{
+                }
+                else if (listSliding.get(position).getTitle().equals(getString(R.string.scanner))){
+                    new IntentIntegrator(MainActivity.this).initiateScan();
+
+                }
+                else{
                     selectFragment(position, listSliding.get(position).getTitle());
                 }
 
@@ -158,12 +213,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void selectFragment(int position, String fragmentTitle) {
         hideKeyboard();
-        Fragment fragment = getNewFragment(fragmentTitle, position);
 
+        Fragment fragment = getNewFragment(position, fragmentTitle);
+        setTitle(fragmentTitle);
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.main_content,fragment).commit();
 
-        setTitle(fragmentTitle);
         listViewSliding.setItemChecked(position,true);
         drawerLayout.closeDrawer(listViewSliding);
     }
@@ -174,47 +229,18 @@ public class MainActivity extends AppCompatActivity {
         listSliding = new ArrayList<>();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
 
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        actionBarDrawerToggle.syncState();
-    }
-
-    /**Instantiate and return a new fragment. The type of fragment returned is based on the int
-     * passed in as argument.
-     *
-     * @param fragmentTitle : int
-     *@return fragment : Fragment
-     */
-    public Fragment getNewFragment(String fragmentTitle, int position) {
+    public Fragment getNewFragment(int position,String fragmentTitle) {
 
         Fragment fragment = null;
         Bundle args = new Bundle();
 
         if(fragmentTitle.equals(getString(R.string.fragment_home))){
             fragment = new FragmentHome();
-        }if(fragmentTitle.equals(getString(R.string.fragment_add_income))){
+        }if(fragmentTitle.equals(getString(R.string.fragment_add_income_expenditure))){
             fragment = new FragmentAddExpInc();
-            args.putString(getString(R.string.ARG_FRAGMENT_TITLE),getString(R.string.fragment_add_income));
-        }if(fragmentTitle.equals(getString(R.string.fragment_add_expenditure))){
-            fragment = new FragmentAddExpInc();
-            args.putString(getString(R.string.ARG_FRAGMENT_TITLE),getString(R.string.fragment_add_expenditure));
+
         }if(fragmentTitle.equals(getString(R.string.fragment_incomes))){
             fragment = new FragmentListExpInc();
             args.putString(getString(R.string.ARG_FRAGMENT_TITLE),getString(R.string.fragment_incomes));
@@ -246,10 +272,10 @@ public class MainActivity extends AppCompatActivity {
 
         listSliding.add(new ItemSlideMenu(R.drawable.ic_home, getString(R.string.fragment_home)));
         if(loggedin){
-            listSliding.add(new ItemSlideMenu(R.drawable.ic_money, getString(R.string.fragment_add_income)));
-            listSliding.add(new ItemSlideMenu(R.drawable.ic_expenditure, getString(R.string.fragment_add_expenditure)));
+            listSliding.add(new ItemSlideMenu(R.drawable.ic_money, getString(R.string.fragment_add_income_expenditure)));
             listSliding.add(new ItemSlideMenu(R.drawable.ic_list_inc, getString(R.string.fragment_incomes)));
             listSliding.add(new ItemSlideMenu(R.drawable.ic_list_exp, getString(R.string.fragment_expenditures)));
+            listSliding.add(new ItemSlideMenu(R.drawable.ic_sanner, getString(R.string.scanner)));
             listSliding.add (new ItemSlideMenu(R.drawable.ic_logout, getString(R.string.fragment_logout)));
 
         }else{

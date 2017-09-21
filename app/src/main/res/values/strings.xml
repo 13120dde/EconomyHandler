@@ -7,6 +7,13 @@
     <string name="drawer_closed">Closed</string>
 
     <string name="monthly_expenditures">Monthly expenditures</string>
+    <string name="income">Income</string>
+    <string name="expenditure">Expenditure</string>
+    <string name="scanner">Scan QR</string>
+    <string name="scanner_cancelled">Scanner canceled</string>
+    <string name="scanner_ok">Scenned: </string>
+    <string name="scanner_value">Item registered as:</string>
+    <string name="scanner_not_found">Item not found, add data manually</string>
 
     <!-- Sharedpreferences keys-->
     <string name="ECONOMYHANDLER_USER_DATA">SP_USER_DATA</string>
@@ -18,8 +25,8 @@
 
     <!-- Fragment titles-->
     <string name="fragment_home">Home</string>
-    <string name="fragment_add_income">Add income</string>
-    <string name="fragment_add_expenditure">Add expenditure</string>
+    <string name="fragment_add_income_expenditure">Add income / Expenditure</string>
+
     <string name="fragment_incomes">Incomes</string>
     <string name="fragment_expenditures">Expenditures</string>
     <string name="fragment_register">Register</string>

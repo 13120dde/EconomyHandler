@@ -2,10 +2,7 @@ package a13solutions.myEco.model;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.util.Log;
-
-import java.util.Random;
+import android.widget.Toast;
 
 import a13solutions.myEco.MainActivity;
 import a13solutions.myEco.R;
@@ -18,20 +15,23 @@ import a13solutions.myEco.dbHelper.DBManager;
 public class LogicAddExpInc {
 
     private MainActivity activity;
-    private String fragmentTitle;
+    SharedPreferences.Editor editor;
+    SharedPreferences sharedPreferences;
+    private String email;
 
     /**
      *
      * @param activity
-     * @param fragmentTitle
      */
-    public LogicAddExpInc(MainActivity activity, String fragmentTitle) {
+    public LogicAddExpInc(MainActivity activity) {
         this.activity=activity;
-        this.fragmentTitle=fragmentTitle;
+        sharedPreferences = activity.getSharedPreferences(activity.getString(R.string.ECONOMYHANDLER_USER_DATA),Activity.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        email = sharedPreferences.getString(activity.getString(R.string.USER_EMAIL),"");
 
     }
 
-    public boolean addToDb(String title, String category, String date, String amount) {
+    public boolean addIncomeExpenditureToDb(String title, String category, String date, String amount, boolean addToIncomeTable) {
         String message="";
         boolean isSuccess = true;
 
@@ -45,26 +45,51 @@ public class LogicAddExpInc {
             isSuccess=false;
         }
         if(isSuccess){
-            chooseTableAndSend(title, category, date, amount);
+            chooseTableAndSend(title, category, date, amount, addToIncomeTable);
+
         }else{
             UtilityMethods.showNeutralDialog("Error",message,activity);
         }
         return isSuccess;
     }
 
-    private void chooseTableAndSend(String title, String category, String date, String amount) {
+    private void chooseTableAndSend(String title, String category, String date, String amount, boolean tableIncome) {
 
-        Resources res = activity.getResources();
-        SharedPreferences sp = activity.getSharedPreferences(res.getString(R.string.ECONOMYHANDLER_USER_DATA), Activity.MODE_PRIVATE);
-        String email = sp.getString(res.getString(R.string.USER_EMAIL),null);
         double amountReal = Double.parseDouble(amount);
 
-        if (fragmentTitle.equals(activity.getString(R.string.fragment_add_income))){
+        if (tableIncome){
             new DBManager(activity).putIncome(email,title,category,date,amountReal);
+        }else{
+            String barcode = sharedPreferences.getString("bundle",null);
+            if(barcode==null){
+                new DBManager(activity).putExpenditureWithoutScan(email,title,category,date,amountReal);
+            }else{
+                new DBManager(activity).putExpenditureWithScan(email,title,category,date,amountReal,barcode);
+                editor.remove("bundle");
+                editor.commit();
+            }
+
+
         }
-        if(fragmentTitle.equals(activity.getString(R.string.fragment_add_expenditure))){
-            new DBManager(activity).putExpenditure(email,title,category,date,amountReal);
-        }
+
     }
 
+
+    public boolean addExpenditureWithScan(String result) {
+
+        ReturnPacket resultFromDb = new DBManager(activity).getScanContent(email,result);
+
+        if(resultFromDb!=null){
+            new DBManager(activity).putExpenditureWithScan(email,resultFromDb.getTitle(),resultFromDb.getCategory(),
+                    UtilityMethods.getCurrentDate(),resultFromDb.getAmount(),resultFromDb.getScanContent());
+            Toast.makeText(activity, activity.getString(R.string.scanner_value)+resultFromDb.getTitle()+" - "+resultFromDb.getAmount() , Toast.LENGTH_LONG).show();
+
+            return true;
+        }else{
+
+            editor.putString("bundle", result);
+            editor.commit();
+            return false;
+        }
+    }
 }

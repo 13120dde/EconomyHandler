@@ -101,4 +101,5 @@ public class FragmentHome extends Fragment implements FragmentMethods {
         tvChangeMonth.setText(getString(R.string.monthly_expenditures)+"\n"+dataFragment.getChosenDate());
         logicHome.fillPie(dataFragment.getChosenDate());
     }
+
 }

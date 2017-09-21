@@ -4,6 +4,7 @@ package a13solutions.myEco.view;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -27,17 +30,17 @@ import a13solutions.myEco.model.LogicAddExpInc;
  */
 public class FragmentAddExpInc extends Fragment implements FragmentMethods{
 
-    private EditText etTitle, etAmount;
-    private Button btnAdd;
-    private Spinner spinCategory;
-    private TextView tvDate;
+    private EditText etTitleIncome, etAmountIncome;
+    private Button btnAddIncome;
+    private Spinner spinCategoryIncome;
+    private TextView tvDate, tvInfo;
+    private RadioGroup radioGroup;
 
-    private String title, amount, category, date;
+    private String category;
     private DialogFragment datePicker = new DatePickerFragment();
+    private boolean incomeOrExpenditure = true;
 
-    //Reuses UI for Expenditure and Income
-    private int typeOfFragment;
-    private String fragmentTitle;
+
     private LogicAddExpInc logicAddExpInc;
 
     public FragmentAddExpInc() {
@@ -51,46 +54,53 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
         View rootView = inflater.inflate(R.layout.fragment_add_exp_inc, container, false);
         instantiateComponents(rootView);
         addListeners();
+        setUpCategoryAdapter(incomeOrExpenditure);
 
         return rootView;
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        typeOfFragment = getArguments().getInt(getString(R.string.ARG_FRAGMENT_NUMBER));
-        fragmentTitle = getArguments().getString(getString(R.string.ARG_FRAGMENT_TITLE));
-        logicAddExpInc = new LogicAddExpInc(((MainActivity)getActivity()), fragmentTitle);
+        logicAddExpInc = new LogicAddExpInc(((MainActivity)getActivity()));
     }
 
     private void instantiateComponents(View rootView) {
 
-        etTitle = rootView.findViewById(R.id.et_title);
-        etAmount = rootView.findViewById(R.id.et_amount);
-        spinCategory = rootView.findViewById(R.id.spin_category);
-        btnAdd = rootView.findViewById(R.id.btnAddExpInc);
-        tvDate = rootView.findViewById(R.id.tvDate);
+        etTitleIncome = rootView.findViewById(R.id.etTitleIncome);
+        etAmountIncome = rootView.findViewById(R.id.etAmountIncome);
+        spinCategoryIncome = rootView.findViewById(R.id.spinnerCategoryIncome);
+        btnAddIncome = rootView.findViewById(R.id.btnAddIncome);
+        tvDate = rootView.findViewById(R.id.tvDateIncome);
+        radioGroup = rootView.findViewById(R.id.radioGroup);
+        tvInfo = rootView.findViewById(R.id.tvInfoInAdd);
 
         //gets todays date
         DataFragment f = (DataFragment) getActivity().getFragmentManager().findFragmentByTag(DataFragment.DATA_TAG);
         tvDate.setText(f.getDate());
 
 
-        ArrayAdapter<CharSequence> adapter = null;
+    }
 
-        //change spinner based on if this fragment is expenditure or income
-        if (fragmentTitle.equals(getString(R.string.fragment_add_income))){
-                adapter = ArrayAdapter.createFromResource(getActivity(),
-                        R.array.category_income, android.R.layout.simple_spinner_item);
-        }
-        if(fragmentTitle.equals(getString(R.string.fragment_add_expenditure))){
-            adapter = ArrayAdapter.createFromResource(getActivity(),
+    public void setInfoText(String text){
+        tvInfo.setText(text);
+    }
+
+    private void setUpCategoryAdapter(boolean incomeExpendiutre){
+        ArrayAdapter<CharSequence> adapterIncome = null;
+
+        if(incomeExpendiutre){
+            adapterIncome = ArrayAdapter.createFromResource(getActivity(),
+                    R.array.category_income, android.R.layout.simple_spinner_item);
+        }else{
+            adapterIncome = ArrayAdapter.createFromResource(getActivity(),
                     R.array.category_expenditure, android.R.layout.simple_spinner_item);
         }
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinCategory.setAdapter(adapter);
+
+
+        adapterIncome.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinCategoryIncome.setAdapter(adapterIncome);
     }
 
     public void updateData() {
@@ -101,21 +111,38 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
 
     private void addListeners() {
 
-        //Listener for spinner
-        spinCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                RadioButton rb = radioGroup.findViewById(i);
+                if(rb.getId()==R.id.radioIncome){
+                    incomeOrExpenditure = true;
+                }
+                if (rb.getId()==R.id.radioExpenditure){
+                    incomeOrExpenditure = false;
+                }
+                setUpCategoryAdapter(incomeOrExpenditure);
+            }
+        });
+
+        //Listener for spinners
+        spinCategoryIncome.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                category = (String) spinCategory.getItemAtPosition(i);
+                category = (String) spinCategoryIncome.getItemAtPosition(i);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                category = (String) spinCategory.getItemAtPosition(0);
+                category = (String) spinCategoryIncome.getItemAtPosition(0);
             }
         });
 
-        ///listener for tvDate
+
+
+
+
         datePicker.setShowsDialog(true);
         datePicker.setTargetFragment(this,0);
 
@@ -126,24 +153,21 @@ public class FragmentAddExpInc extends Fragment implements FragmentMethods{
             }
         });
 
-        //Listener for button
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+
+        //Listener for buttons
+        btnAddIncome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                title = etTitle.getText().toString();
-                amount = etAmount.getText().toString();
-                date = tvDate.getText().toString();
-
-                if(logicAddExpInc.addToDb(title, category, date, amount)){
-                    etAmount.setText("");
-                    etTitle.setText("");
-                    ((MainActivity) getActivity()).hideKeyboard();
-                };
-            }
+                setUpCategoryAdapter(incomeOrExpenditure);
+                logicAddExpInc.addIncomeExpenditureToDb(etTitleIncome.getText().toString(), category, tvDate.getText().toString(), etAmountIncome.getText().toString(), incomeOrExpenditure);
+                etAmountIncome.setText("");
+                etTitleIncome.setText("");
+                }
         });
 
     }
+
 
 
 }

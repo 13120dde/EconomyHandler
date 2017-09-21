@@ -16,10 +16,15 @@ import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_AMOUNT;
 import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_CATEGORY;
 import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_DATE;
 import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_ID;
+import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_SCAN_CONTENT;
 import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_TITLE;
 import static a13solutions.myEco.dbHelper.DBHelper.EX_INC_COLUMN_USER_EMAIL;
 import static a13solutions.myEco.dbHelper.DBHelper.EXPENDITURE_TABLE_NAME;
 import static a13solutions.myEco.dbHelper.DBHelper.INCOME_TABLE_NAME;
+import static a13solutions.myEco.dbHelper.DBHelper.SCAN_COLUMN_CONTENT;
+import static a13solutions.myEco.dbHelper.DBHelper.SCAN_COLUMN_EMAIL;
+import static a13solutions.myEco.dbHelper.DBHelper.SCAN_COLUMN_ID;
+import static a13solutions.myEco.dbHelper.DBHelper.SCAN_TABLE_NAME;
 
 /**
  * Created by 13120dde on 2017-09-17.
@@ -62,7 +67,7 @@ public final class DBManager {
         Log.d("DB_PUT_INCOME",email+title+category+date+amountReal);
     }
 
-    public void putExpenditure(String email, String title, String category, String date, double amountReal) {
+    public void putExpenditureWithoutScan(String email, String title, String category, String date, double amountReal) {
         dbHelperUser = new DBHelper(actvity);
         db = dbHelperUser.getWritableDatabase();
         values = new ContentValues();
@@ -74,6 +79,23 @@ public final class DBManager {
         db.insert(EXPENDITURE_TABLE_NAME,"",values);
         Log.d("DB_PUT_EXPENDITURE",email+title+category+date+amountReal);
 
+    }
+
+    public void putExpenditureWithScan(String email,String title,String category,String date,double amountReal, String content){
+        dbHelperUser = new DBHelper(actvity);
+        db = dbHelperUser.getWritableDatabase();
+        values = new ContentValues();
+        values.put(EX_INC_COLUMN_USER_EMAIL, email);
+        values.put(EX_INC_COLUMN_TITLE, title);
+        values.put(EX_INC_COLUMN_CATEGORY, category);
+        values.put(EX_INC_COLUMN_AMOUNT, amountReal);
+        values.put(EX_INC_COLUMN_DATE, date);
+        values.put(EX_INC_COLUMN_SCAN_CONTENT, content);
+        db.insert(EXPENDITURE_TABLE_NAME,"",values);
+
+
+        Log.d("DB_PUT_SCANNED_EXP",email+title+category+date+amountReal);
+        db.close();
     }
 
     public ReturnPacket getUserEmail(String email) {
@@ -95,6 +117,8 @@ public final class DBManager {
             cursor.close();
         return res;
     }
+
+
 
     public ReturnPacket login(String email){
         dbHelperUser = new DBHelper(actvity);
@@ -132,7 +156,41 @@ public final class DBManager {
         return res;
     }
 
+    public ReturnPacket getScanContent(String email, String content){
+        dbHelperUser = new DBHelper(actvity);
+        db = dbHelperUser.getReadableDatabase();
+        cursor = db.rawQuery("SELECT "
+                +EX_INC_COLUMN_TITLE+", "
+                +EX_INC_COLUMN_AMOUNT+", "
+                +EX_INC_COLUMN_CATEGORY+","
+                +EX_INC_COLUMN_SCAN_CONTENT
+                +" FROM "+EXPENDITURE_TABLE_NAME
+                +" WHERE "+EX_INC_COLUMN_USER_EMAIL+" = '"+email+"' AND "
+                +EX_INC_COLUMN_SCAN_CONTENT+" = '"+content+"'"
+                ,null);
 
+        ReturnPacket res = new ReturnPacket();
+
+        if (cursor.moveToFirst()){
+            cursor.toString();
+            int scanContentIndex = cursor.getColumnIndex(EX_INC_COLUMN_SCAN_CONTENT);
+            int expTitleIndex =cursor.getColumnIndex(EX_INC_COLUMN_TITLE);
+            int expAmountIndex =cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT);
+            int expCategoryIndex = cursor.getColumnIndex(EX_INC_COLUMN_CATEGORY);
+
+            cursor.moveToFirst();
+            res = new ReturnPacket();
+            res.setTitle(cursor.getString(expTitleIndex));
+            res.setCategory(cursor.getString(expCategoryIndex));
+            res.setAmount(cursor.getFloat(expAmountIndex));
+            res.setScanContent(cursor.getString(scanContentIndex));
+
+            return res;
+        }else{
+            return null;
+        }
+
+    }
 
     public ArrayList<ExpIncItem> getExpenditures(String email, String dateFrom, String dateTo) {
         dbHelperUser = new DBHelper(actvity);
@@ -140,6 +198,7 @@ public final class DBManager {
         ArrayList<ExpIncItem> expenditureArray = new ArrayList<>();
         int index = 0;
 
+        Log.d("IN_DB","getExpenditures(): ATTEMPTING TO FETCH EXPENDITURES");
         cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
                 +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE+", "+EX_INC_COLUMN_ID
                 +" FROM "+EXPENDITURE_TABLE_NAME
@@ -154,7 +213,10 @@ public final class DBManager {
             String date = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_DATE));
             double amount = cursor.getDouble(cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT));
             int key = cursor.getInt(cursor.getColumnIndex(EX_INC_COLUMN_ID));
-            expenditureArray.add(new ExpIncItem(title,category,date,amount,key,index));
+            ExpIncItem item= new ExpIncItem(title,category,date,amount,key,index);
+            expenditureArray.add(item);
+            Log.d("IN_DB","getExpenditures(): "+item.toString());
+
             index++;
         }
 
@@ -166,6 +228,8 @@ public final class DBManager {
         db = dbHelperUser.getReadableDatabase();
         ArrayList<ExpIncItem> incomeArray = new ArrayList<>();
         int index = 0;
+
+        Log.d("IN_DB","getIncomes(): ATTEMPTING TO FETCH INCOMES");
 
         cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_TITLE+", "+EX_INC_COLUMN_CATEGORY+", "
                         +EX_INC_COLUMN_AMOUNT+", "+EX_INC_COLUMN_DATE+", "+EX_INC_COLUMN_ID
@@ -188,49 +252,5 @@ public final class DBManager {
 
         return incomeArray;
     }
-    public ArrayList<ExpIncItem> getIncomesByDay(String email, String date) {
-        dbHelperUser = new DBHelper(actvity);
-        db = dbHelperUser.getReadableDatabase();
-        ArrayList<ExpIncItem> incomeArray = new ArrayList<>();
-
-        cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_CATEGORY+", " +EX_INC_COLUMN_AMOUNT
-                        +" FROM "+INCOME_TABLE_NAME
-                        +" WHERE "+EX_INC_COLUMN_USER_EMAIL+" = '"+email
-                        +"' AND " + EX_INC_COLUMN_DATE +" = '"+date+"')"
-                ,null);
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            String category = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_CATEGORY));
-            double amount = cursor.getDouble(cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT));
-            ExpIncItem item = new ExpIncItem("",category,date,amount,0,0);
-            Log.d("IN_DB","getIncomes():"+item.toString());
-            incomeArray.add(item);
-        }
-
-        return incomeArray;
-    }
-
-    public ArrayList<ExpIncItem> getExpendituresByDay(String email, String date) {
-        dbHelperUser = new DBHelper(actvity);
-        db = dbHelperUser.getReadableDatabase();
-        ArrayList<ExpIncItem> expenditureArray = new ArrayList<>();
-
-        cursor = db.rawQuery("SELECT "+EX_INC_COLUMN_CATEGORY+", " +EX_INC_COLUMN_AMOUNT
-                        +" FROM "+EXPENDITURE_TABLE_NAME
-                        +" WHERE "+EX_INC_COLUMN_USER_EMAIL+" = '"+email
-                        +"' AND " + EX_INC_COLUMN_DATE +" = '"+date+"')"
-                ,null);
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            String category = cursor.getString(cursor.getColumnIndex(EX_INC_COLUMN_CATEGORY));
-            double amount = cursor.getDouble(cursor.getColumnIndex(EX_INC_COLUMN_AMOUNT));
-            ExpIncItem item = new ExpIncItem("",category,date,amount,0,0);
-            Log.d("IN_DB","getIncomes():"+item.toString());
-            expenditureArray.add(item);
-        }
-
-        return expenditureArray;
-    }
-
 
 }

@@ -30,7 +30,7 @@ import a13solutions.myEco.model.UtilityMethods;
  */
 public class FragmentListExpInc extends Fragment implements FragmentMethods {
 
-    private String fragmentTitle;
+    public static String fragmentTitle;
     private boolean isExpanded;
 
     private TextView tvDateFrom, tvDateTo, tvBottom, tvSummary;

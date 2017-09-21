@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:support-v4:26.+'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     testCompile 'junit:junit:4.12'
+    compile 'com.journeyapps:zxing-android-embedded:3.5.0'
 }

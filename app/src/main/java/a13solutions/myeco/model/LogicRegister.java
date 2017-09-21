@@ -1,14 +1,8 @@
 package a13solutions.myEco.model;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.util.Log;
 
-import java.util.Random;
-
 import a13solutions.myEco.MainActivity;
-import a13solutions.myEco.R;
 import a13solutions.myEco.dbHelper.DBManager;
 
 /**
@@ -120,8 +114,7 @@ public class LogicRegister {
             dbManager.registerUser(email,password,firstName,surname);
             Log.d("IN_email",email);
 
-            //TODO remove this line!
-            UtilityMethods.populateEmptyTable(email,activity);
+             UtilityMethods.populateEmptyTable(activity,email);
 
             resultInfo="Registration complete.\nProcede to login.";
             activity.showHomeFragment();

@@ -10,6 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
+    private static final String DATABASE_NAME ="economyHandlerUserData.db";
+    private static final int DATABASE_VERSION = 1;
+
     //table user
     public static final String USER_TABLE_NAME ="users";
     public static final String USER_COLUMN_EMAIL = "email";
@@ -26,10 +29,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EX_INC_COLUMN_CATEGORY ="category";
     public static final String EX_INC_COLUMN_AMOUNT ="amount";
     public static final String EX_INC_COLUMN_DATE ="date";
+    public static final String EX_INC_COLUMN_SCAN_CONTENT="scan_content";
 
 
-    private static final String DATABASE_NAME ="economyHandlerUserData.db";
-    private static final int DATABASE_VERSION = 1;
+    //table scan
+    public static final String SCAN_TABLE_NAME="scans";
+    public static final String SCAN_COLUMN_ID ="id";
+    public static final String SCAN_COLUMN_EMAIL="user_email";
+    public static final String SCAN_COLUMN_CONTENT="content";
+
 
     //query create table user
     private static final String DATABASE_CREATE_TABLE_USER = "CREATE TABLE "
@@ -44,10 +52,11 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_CREATE_TABLE_EXPENDITURE=" CREATE TABLE "+EXPENDITURE_TABLE_NAME+"("
             + EX_INC_COLUMN_ID +" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
             + EX_INC_COLUMN_USER_EMAIL +" TEXT NOT NULL, "
-            + EX_INC_COLUMN_TITLE +" TEXT NOT NULL, "
+            + EX_INC_COLUMN_TITLE +" TEXT, "
             + EX_INC_COLUMN_CATEGORY +" TEXT, "
-            + EX_INC_COLUMN_AMOUNT + " REAL NOT NULL, "
+            + EX_INC_COLUMN_AMOUNT + " REAL, "
             + EX_INC_COLUMN_DATE +" TEXT, "
+            +EX_INC_COLUMN_SCAN_CONTENT +" TEXT, "
             +" FOREIGN KEY ("+ EX_INC_COLUMN_USER_EMAIL +") REFERENCES " +USER_TABLE_NAME +"("+USER_COLUMN_EMAIL+")"
             +");";
 
@@ -60,8 +69,6 @@ public class DBHelper extends SQLiteOpenHelper {
             + EX_INC_COLUMN_DATE +" TEXT, "
             +" FOREIGN KEY ("+ EX_INC_COLUMN_USER_EMAIL +") REFERENCES " +USER_TABLE_NAME +"("+USER_COLUMN_EMAIL+")"
             + ");";
-
-
 
 
     public DBHelper(Context context) {

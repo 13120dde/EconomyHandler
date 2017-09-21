@@ -1,14 +1,12 @@
 package a13solutions.myEco.model;
 
 import android.content.DialogInterface;
-import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
@@ -99,8 +97,7 @@ public class UtilityMethods {
         return totalAmount;
     }
 
-
-    public static void populateEmptyTable(String email,MainActivity activity) {
+    public  static void populateEmptyTable(MainActivity activity, String email) {
         String[] categoryIncome = {"Salary", "Other"};
         String[] categoryExp = {"Accomodation","Food","Leisure","Travel", "Other"};
         String[] incomeSalaryTitle ={"Work 1", "Work 2", "Work 1 bonus", "Work 2 bonus", "App1 sale","App2 sale","Lotto","Gift"};
@@ -151,7 +148,9 @@ public class UtilityMethods {
                     amount = getRandomAmount(100);
                 }
 
-                new DBManager(activity).putExpenditure(email,title,category,date,amount);
+                String rngScanContent = incomeSalaryTitle[new Random().nextInt(incomeSalaryTitle.length)]+ otherTitle[new Random().nextInt(otherTitle.length)]+ expLeisureTitle[new Random().nextInt(expLeisureTitle.length)];
+                new DBManager(activity).putExpenditureWithScan(email,title,category,date,amount, rngScanContent);
+
                 selectTable=!selectTable;
             }
         }
@@ -174,5 +173,6 @@ public class UtilityMethods {
     private static  String getRandomElement(String[] arg) {
         return arg[new Random().nextInt(arg.length)];
     }
+
 
 }

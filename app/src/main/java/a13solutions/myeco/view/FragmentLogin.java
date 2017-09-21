@@ -33,7 +33,6 @@ public class FragmentLogin extends Fragment implements FragmentMethods {
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
