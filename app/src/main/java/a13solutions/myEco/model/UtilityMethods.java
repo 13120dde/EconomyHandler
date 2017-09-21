@@ -98,11 +98,6 @@ public class UtilityMethods {
     }
 
     public  static void populateEmptyTable(MainActivity activity, String email) {
-
-
-
-
-        
         String[] categoryIncome = {"Salary", "Other"};
         String[] categoryExp = {"Accomodation","Food","Leisure","Travel", "Other"};
         String[] incomeSalaryTitle ={"Work 1", "Work 2", "Work 1 bonus", "Work 2 bonus", "App1 sale","App2 sale","Lotto","Gift"};
